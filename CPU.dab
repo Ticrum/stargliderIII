@@ -1,0 +1,148 @@
+{Mesh
+  [ 'C1
+    Shape = "Triangle"
+    Color = 0, 128, 0
+    {Coord
+      [
+	Position = -10, -10, -5
+      ],
+      [
+	Position = 0, 0, 17
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 10, -10, -5
+      ]
+    }
+  ],
+  [ 'C2
+    Shape = "Triangle"
+    Color = 0, 100, 0
+    {Coord
+      [
+	Position = -10, -10, -5
+      ],
+      [
+	Position = 0, 0, 17
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -13, 0, 24
+      ]
+    }
+  ],
+  [ 'C3
+    Shape = "Triangle"
+    Color = 0, 100, 0
+    {Coord
+      [
+	Position = 10, -10, -5
+      ],
+      [
+	Position = 0, 0, 17
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 13, 0, 24
+      ]
+    }
+  ],
+
+  [ 'A1
+    Shape = "Triangle"
+    Color = 0, 180, 0
+    {Coord
+      [
+	Position = -10, -10, -5
+      ],
+      [
+	Position = -25, 0, -11
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -13, 0, 24
+      ]
+    }
+  ],
+  [ 'A2
+    Shape = "Triangle"
+    Color = 0, 180, 0
+    {Coord
+      [
+	Position = 10, -10, -5
+      ],
+      [
+	Position = 25, 0, -11
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 13, 0, 24
+      ]
+    }
+  ],
+
+  [ 'B1
+    Shape = "Triangle"
+    Color = 0, 160, 0
+    {Coord
+      [
+	Position = 10, -10, -5
+      ],
+      [
+	Position = 25, 0, -11
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 13, 0, -20
+      ]
+    }
+  ],
+  [ 'B2
+    Shape = "Triangle"
+    Color = 0, 160, 0
+    {Coord
+      [
+	Position = -10, -10, -5
+      ],
+      [
+	Position = -25, 0, -11
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -13, 0, -20
+      ]
+    }
+  ],
+  [ 'B3
+    Shape = "Triangle"
+    Color = 0, 128, 0
+    {Coord
+      [
+	Position = 10, -10, -5
+      ],
+      [
+	Position = 13, 0, -20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -13, 0, -20
+      ]
+    }
+  ],
+  [ 'B4
+    Shape = "Triangle"
+    Color = 0, 128, 0
+    {Coord
+      [
+	Position = 10, -10, -5
+      ],
+      [
+	Position = -10, -10, -5
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -13, 0, -20
+      ]
+    }
+  ]
+}
