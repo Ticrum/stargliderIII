@@ -14,7 +14,7 @@ void std_draw(t_bunny_pixelarray	*pix,
   compt2 = 0;
   pos[3].x = 0;
   pos[3].y = 0;
-  pos[3].z = -800;
+  pos[3].z = -1000;//-800
   //write(1,"\n",1);
   while (compt != obj->nbr_subelems)
     {
@@ -22,7 +22,7 @@ void std_draw(t_bunny_pixelarray	*pix,
       pos[0] = obj->pos[compt2];
       pos[1] = obj->pos[compt2 + 1];
       pos[2] = obj->pos[compt2 + 2];
-      
+
       pos[0].x = pos[0].x + posi.x + obj->position.x;
       pos[0].y = pos[0].y + posi.y + obj->position.y;
       pos[0].z = pos[0].z + posi.z + obj->position.z;
@@ -36,6 +36,7 @@ void std_draw(t_bunny_pixelarray	*pix,
       pos[0] = stdtruerotation(pos[0], rotation, pos[3]);
       pos[1] = stdtruerotation(pos[1], rotation, pos[3]);
       pos[2] = stdtruerotation(pos[2], rotation, pos[3]);
+
 
       std_set_triangle(pix, pos, &obj->color[compt].full, NULL, &compt, 0);
       compt = compt + 1;

@@ -13,7 +13,7 @@ static t_bunny_response std_affiche(void *data2)
   data = (t_data *)data2;
   std_clear_pixelarray(data->pix, BLACK);
   i = RED;
-  
+
   if (bunny_get_keyboard()[BKS_S])
     data->pos = move_player(data->pos, data->rotation, 'z', 10);//data->pos.z + 10;
   if (bunny_get_keyboard()[BKS_Z])
@@ -29,24 +29,24 @@ static t_bunny_response std_affiche(void *data2)
 
   //std_set_pixel(data->pix, std_decal(data->pix, std_perspective(data->pos.x, data->pos.y, data->pos.z)), BLUE);
   if (bunny_get_keyboard()[BKS_UP])
-    data->rotation.x = data->rotation.x + 0.05;
+      data->rotation.x = data->rotation.x + 0.05;//rotate_player(data->rotation, 'x', 0.05);//
   if (bunny_get_keyboard()[BKS_DOWN])
-    data->rotation.x = data->rotation.x - 0.05;
+      data->rotation.x = data->rotation.x - 0.05;//rotate_player(data->rotation, 'x', -0.05);//
   if (bunny_get_keyboard()[BKS_LEFT])
-    data->rotation.y = data->rotation.y + 0.05;
+      data->rotation.y = data->rotation.y + 0.05;//rotate_player(data->rotation, 'y', 0.05);//
   if (bunny_get_keyboard()[BKS_RIGHT])
-    data->rotation.y = data->rotation.y - 0.05;
-  
+      data->rotation.y = data->rotation.y - 0.05;//rotate_player(data->rotation, 'y', -0.05);//
+
   std_draw(data->pix, &data->obj[0], data->rotation, data->pos);
   std_draw(data->pix, &data->obj[1], data->rotation, data->pos);
 
   data->obj[2].position.x = -data->pos.x;
-  data->obj[2].position.y = -data->pos.y + 30;
-  data->obj[2].position.z = -data->pos.z - 800;
+  data->obj[2].position.y = -data->pos.y + 0;
+  data->obj[2].position.z = -data->pos.z + 100;
   rota.x = 0.5;
   rota.y = 1.5;
-  rota.z = 0;
-  std_draw(data->pix, &data->obj[2], rota, data->pos);
+  rota.z = 0.5;
+  std_draw(data->pix, &data->obj[2], rota, data->obj[2].position);
   /*
   posi[0].x = -800;
   posi[0].y = -100;
@@ -54,19 +54,19 @@ static t_bunny_response std_affiche(void *data2)
   posi[1].y = 200;
   std_set_line(data2->pix, posi, &i);
   */
-  po[0].x = data->pos.x + 20;
+  po[0].x = data->pos.x + 0;
   po[0].y = data->pos.y + 0;
-  po[0].z = data->pos.z + -500;
+  po[0].z = data->pos.z + 100;
   po[1].x = data->pos.x + 0;
-  po[1].y = data->pos.y + 20;
-  po[1].z = data->pos.z + -500;
-  po[2].x = data->pos.x + 20;
-  po[2].y = data->pos.y + 20;
-  po[2].z = data->pos.z + -500;
+  po[1].y = data->pos.y + 0;
+  po[1].z = data->pos.z + 100;
+  po[2].x = data->pos.x + 0;
+  po[2].y = data->pos.y + 0;
+  po[2].z = data->pos.z + 100;
   po[3].z = data->rotation.x;
   po[3].y = 0;
   po[3].x = 0;
-  
+  printf("%f %f %f\n", data->pos.x, data->pos.y, data->pos.z);
   po[4].y = 0;
   po[4].x = 0;
   po[4].z = 0;
@@ -97,10 +97,10 @@ int main(void)
   t_data data;
   t_pos pos;
 
-  pos.x = -10;
-  pos.y = 20;
-  pos.z = -400;
-  
+  pos.x = 0;//-10;
+  pos.y = 0;//20;
+  pos.z = 0;//-400;
+
   data.pos.z = 1;
   data.pos.y = 0;
   data.pos.x = 0;
@@ -110,15 +110,15 @@ int main(void)
   data.win = bunny_start(1000, 1000, false, "Bunny");
   data.pix = bunny_new_pixelarray(1000, 1000);
   data.obj[0] = load_obj("test_space.dab", 17, pos);
-  pos.x = -10;
-  pos.y = 20;
-  pos.z = -450;
-  data.obj[1] = load_obj("test.dab", 2, pos);
   pos.x = 0;
-  pos.y = +30;
-  pos.z = -800;
+  pos.y = 0;
+  pos.z = 0;
+  data.obj[1] = load_obj("test.dab", 3, pos);
+  pos.x = 0;
+  pos.y = 0;
+  pos.z = 0;
   data.obj[2] = load_obj("CPU.dab", 9, pos);
-  
+
   //write(1,"a",1);
   bunny_set_loop_main_function(std_affiche);
   bunny_set_key_response(std_stop);

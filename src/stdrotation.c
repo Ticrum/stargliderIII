@@ -7,7 +7,7 @@ t_pos stdrotation(t_pos target,
   t_pos old_point;
 
   old_point = target;
-  
+
   target.x = old_point.x * cos(rotation.z) + old_point.y * -sin(rotation.z);
   target.y = old_point.x * sin(rotation.z) + old_point.y * cos(rotation.z);
   target.z = old_point.z;

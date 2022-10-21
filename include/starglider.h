@@ -102,5 +102,8 @@ t_pos		move_player(t_pos		pos,
 			    char		axe,
 			    float		step);
 
+t_pos           rotate_player(t_pos             pos,
+                              char              axe,
+                              float             step);
 
 #endif //	STARGLIDER_H
