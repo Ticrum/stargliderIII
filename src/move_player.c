@@ -30,6 +30,7 @@ t_pos move_player(t_pos pos,
   printf("%f %f %f\n", angle.x, angle.y, angle.z);
   angle.y = -angle.y;
   angle.x = -angle.x;
+  angle.z = -angle.z;
   /*
   target = newpos;
   old_point = target;

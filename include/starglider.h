@@ -15,25 +15,36 @@ typedef struct s_pos
 
 typedef struct s_obj
 {
-  int nbr_subelems;
-  t_pos position;
-  t_pos rotation;
-  t_pos zoom;
-  //t_bunny_color color;
-  t_bunny_picture *texture;
-  t_bunny_position texture_position;
-  t_pos         *pos;
-  t_bunny_color *color;
-  //struct s_obj *subelems[0];
+    int nbr_subelems;
+    t_pos position;
+    t_pos tposition;
+    t_pos rotation;
+    t_pos zoom;
+    //t_bunny_color color;
+    t_bunny_picture *texture;
+    t_bunny_position texture_position;
+    t_pos         *pos;
+    t_bunny_color *color;
+    //struct s_obj *subelems[0];
 }t_obj;
+
+typedef struct s_sphere
+{
+    t_pos pos;
+    int radius;
+    int res;
+    t_pos **po;
+}t_sphere;
 
 typedef struct s_data
 {
-  t_bunny_window *win;
-  t_bunny_pixelarray *pix;
-  t_obj obj[3];
-  t_pos pos;
-  t_pos rotation;
+    t_bunny_window *win;
+    t_bunny_pixelarray *pix;
+    t_obj obj[3];
+    t_sphere sphere[3];
+    t_pos pos;
+    t_pos tpos;
+    t_pos rotation;
 }t_data;
 
 double std_abs(double				nbr);
@@ -66,14 +77,19 @@ t_bunny_position find_pos(t_bunny_position	*pos,
 			  int			start,
 			  int			end);
 
-t_obj load_obj(char				*file,
-	       int				nbr_obj,
-	       t_pos				objpos);
+t_obj            load_obj(char          	*file,
+                          int			nbr_obj,
+                          t_pos			objpos);
 
-void std_draw(t_bunny_pixelarray		*pix,
-	      t_obj				*obj,
-	      t_pos				rotation,
-	      t_pos				posi);
+void             std_draw(t_bunny_pixelarray	*pix,
+                          t_obj			*obj,
+                          t_pos			rotation,
+                          t_pos			posi);
+
+void std_draw_static(t_bunny_pixelarray         *pix,
+                     t_obj                      *obj,
+                     t_pos                      rotation,
+                     t_pos                      posi);
 
 t_pos stdtruerotation(t_pos			target,
 		      t_pos			rotation,
@@ -105,5 +121,18 @@ t_pos		move_player(t_pos		pos,
 t_pos           rotate_player(t_pos             pos,
                               char              axe,
                               float             step);
+
+void            fire_beam(t_bunny_pixelarray    *pix,
+                          t_bunny_position      *pos,
+                          unsigned int          *color);
+
+t_sphere        load_sphere(t_pos               pos,
+                            int                 radius,
+                            int                 res);
+
+void            draw_sphere(t_bunny_pixelarray	*pix,
+                            t_sphere            *sphere,
+                            t_pos		rotation,
+                            t_pos		posi);
 
 #endif //	STARGLIDER_H

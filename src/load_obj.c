@@ -17,10 +17,11 @@ t_obj load_obj(char	*file,
     return (newobj);
   newobj.nbr_subelems = nbr_obj;
   newobj.position = objpos;
+  newobj.tposition = objpos;
 
   compt = 0;
   compt2 = 0;
-  
+
   conf = bunny_open_configuration(file, NULL);
   while (compt < nbr_obj)
     {
@@ -41,15 +42,15 @@ t_obj load_obj(char	*file,
       newobj.color[compt].argb[GREEN_CMP] = i[1];
       newobj.color[compt].argb[BLUE_CMP] = i[2];
 
-      newobj.pos[compt2].x = i[3];
-      newobj.pos[compt2].y = i[4];
-      newobj.pos[compt2].z = i[5];
-      newobj.pos[compt2 + 1].x = i[6];
-      newobj.pos[compt2 + 1].y = i[7];
-      newobj.pos[compt2 + 1].z = i[8];
-      newobj.pos[compt2 + 2].x = i[9];
-      newobj.pos[compt2 + 2].y = i[10];
-      newobj.pos[compt2 + 2].z = i[11];
+      newobj.pos[compt2].x = i[3] + newobj.position.x;
+      newobj.pos[compt2].y = i[4] + newobj.position.y;
+      newobj.pos[compt2].z = i[5] + newobj.position.z;
+      newobj.pos[compt2 + 1].x = i[6] + newobj.position.x;
+      newobj.pos[compt2 + 1].y = i[7] + newobj.position.y;
+      newobj.pos[compt2 + 1].z = i[8] + newobj.position.z;
+      newobj.pos[compt2 + 2].x = i[9] + newobj.position.x;
+      newobj.pos[compt2 + 2].y = i[10] + newobj.position.y;
+      newobj.pos[compt2 + 2].z = i[11] + newobj.position.z;
       /*
       pos[0].x = i[3] + posi.x;
       pos[0].y = i[4] + posi.y;

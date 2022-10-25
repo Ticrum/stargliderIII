@@ -1,6 +1,5 @@
 out=volume
 src=$(shell find src/ -name "*.c")
-tem=$(shell find objects/label -name "*.so")
 header=$(shell find include -name "*.h")
 obj=$(src:.c=.o)
 lib=lib$(out).so
@@ -8,25 +7,47 @@ sta=lib$(out).a
 libpath= -I ./include/
 tempath=-L./objects/label/
 rpath=-Wl, -rpath,/objects/label/
-flag= -W -Wall -llapin -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_objdetect -lopencv_video -lopencv_core -lavcall -lusb -std=c11 -g 
+flag= -W -Wall -std=c11 -g
+link= -llapin -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lstdc++ -lm -ldl -lpthread -lopencv_imgproc -lopencv_objdetect -lopencv_video -lopencv_core -lavcall -lusb
+user=$(shell printenv USER)
+
+all: cc
 
 cc: $(obj)
-	gcc $(obj) -o $(out) $(libpath) $(flag)
+	gcc $(obj) -o $(out) $(libpath) $(flag) $(link)
 
-exh:
-	sudo cp $(header) ~/../../usr/$(header)
+instal: dy
+	mkdir -p ~/.froot/lib ~/.froot/include
+	cp $(lib) ~/.froot/lib
+	cp $(header) ~/.froot/include
 
-li: exh $(obj)
+instalsta: sta
+	mkdir -p ~/.froot/lib ~/.froot/include
+	cp $(sta) ~/.froot/lib
+	cp $(header) ~/.froot/include
+
+expsta:
+	export C_INCLUDE_PATH=/home/users/$(user)/.froot/include
+	export LIBRARY_PATH=/home/users/$(user)/.froot/lib
+	export CPLUS_INCLUDE_PATH=/home/users/$(user)/.froot/include
+
+expdy:
+	export LD_LIBRARY_PATH=/home/users/$(user)/.froot/lib
+	export C_INCLUDE_PATH=/home/users/$(user)/.froot/include
+
+dy: $(obj)
 	gcc -shared -o $(lib) $(obj)
-	sudo cp $(lib) ~/../../usr/lib/$(lib)
 
 sta: $(obj)
 	ar cr $(sta) $(obj)
-	ranlib libclickodrome.a
 
-cli: cl
-	sudo rm -f ~/../../usr/$(header)
-	sudo rm -f ~/../../usr/lib/$(lib)
+cldy: cl
+	rm -f ~/.froot/lib/$(lib)
+	rm -f ~/.froot/$(header)
+
+clsta: cl
+	rm -f ~/.froot/lib/$(sta)
+	rm -f ~/.froot/$(header)
 
 cl:
 	@rm -f $(out)
@@ -38,10 +59,14 @@ cl:
 	@rm -f $(sta)
 
 .c.o:
-	gcc -c $< $(libpath) -o $@ $(flag)
+	gcc -c $< $(libpath) -o $@ -fpic $(flag) $(link)
 
-re: cl cc
+re: cl all
 
 resta: cl sta
 
-reli: cli cl li
+redy: cl dy
+
+reinstal: cldy instal
+
+reinstalsta: clsta instalsta
