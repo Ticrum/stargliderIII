@@ -89,13 +89,13 @@ static t_bunny_response std_affiche(void *data2)
   {
       data->rotation.z = data->rotation.z + 0.03;//rotate_player(data->rotation,
                                                  //'y', 0.05);//
-      rota.z = 0.05;
+      rota.z = -0.05;
   }
   if (bunny_get_keyboard()[BKS_O])
   {
       data->rotation.z = data->rotation.z - 0.03;//rotate_player(data->rotation,
                                                  //'y', -0.05);//
-      rota.z = -0.05;
+      rota.z = 0.05;
   }
 
   if (bunny_get_keyboard()[BKS_SPACE])
