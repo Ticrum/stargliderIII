@@ -176,7 +176,7 @@ int main(void)
   pos.x = 0;
   pos.y = 400;
   pos.z = 0;
-  data.sphere[0] = load_sphere(pos, 300, 20);
+  data.sphere[0] = load_sphere(pos, 300, 30);
   pos.x = 1000;
   pos.y = 600;
   pos.z = 1000;
