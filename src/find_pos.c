@@ -1,11 +1,11 @@
 
 #include <starglider.h>
 
-t_bunny_position find_pos(t_bunny_position	*pos,
-			  t_bunny_pixelarray	*pix,
-			  int			*in,
-			  int			start,
-			  int			end)
+t_bunny_position find_pos(t_bunny_position      *pos,
+                          t_bunny_pixelarray	*pix,
+                          int			*in,
+                          int			start,
+                          int			end)
 {
   t_bunny_position po[2];
   t_bunny_position posi[2];

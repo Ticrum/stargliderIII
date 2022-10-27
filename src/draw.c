@@ -2,6 +2,7 @@
 #include <starglider.h>
 
 void std_draw(t_bunny_pixelarray	*pix,
+              float                     *zbuffer,
 	      t_obj			*obj,
 	      t_pos			rotation,
 	      t_pos			posi)
@@ -17,6 +18,12 @@ void std_draw(t_bunny_pixelarray	*pix,
   pos[3].y = 40;
   pos[3].z = -800;
   //write(1,"\n",1);
+
+  obj->position.x = obj->position.x + posi.x;
+  obj->position.y = obj->position.y + posi.y;
+  obj->position.z = obj->position.z + posi.z;
+  obj->position = stdtruerotation(obj->position, rotation, pos[3]);
+
   while (compt != obj->nbr_subelems)
     {
         //write(1,"a",1);
@@ -53,7 +60,7 @@ void std_draw(t_bunny_pixelarray	*pix,
         obj->pos[compt2 + 1] = pos[1];
         obj->pos[compt2 + 2] = pos[2];
 
-        std_set_triangle(pix, pos, &obj->color[compt].full, NULL, &compt, 0);
+        std_set_ztriangle(pix, zbuffer, pos, &obj->color[compt].full, NULL, &compt, 0);
         compt = compt + 1;
         compt2 = compt2 + 3;
     }

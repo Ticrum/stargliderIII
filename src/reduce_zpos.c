@@ -1,12 +1,12 @@
 
 #include <starglider.h>
 
-t_bunny_position reduce_pos(t_bunny_position    *pos,
-                            t_bunny_pixelarray	*pix,
-                            int			*place)
+t_pos reduce_zpos(t_pos                 *pos,
+                  t_bunny_pixelarray	*pix,
+                  int			*place)
 {
-  t_bunny_position po;
-  t_bunny_position save;
+  t_pos po;
+  t_pos save;
 
   int in[3];
   int w;
@@ -26,7 +26,7 @@ t_bunny_position reduce_pos(t_bunny_position    *pos,
 
   if ((in[0] == 0 && in[1] == 1) || (in[0] == 1 && in[1] == 0))
     {
-      po = find_pos(pos, pix, in, 0, 1);
+      po = find_zpos(pos, pix, in, 0, 1);
       if (in[0] == 0)
 	{
 	  save = pos[0];
@@ -46,7 +46,7 @@ t_bunny_position reduce_pos(t_bunny_position    *pos,
     }
   else if ((in[1] == 0 && in[2] == 1) || (in[1] == 1 && in[2] == 0))
     {
-      po = find_pos(pos, pix, in, 1, 2);
+      po = find_zpos(pos, pix, in, 1, 2);
       if (in[1] == 0)
 	{
 	  save = pos[1];
@@ -66,7 +66,7 @@ t_bunny_position reduce_pos(t_bunny_position    *pos,
     }
   else if ((in[2] == 0 && in[0] == 1) || (in[2] == 1 && in[0] == 0))
     {
-      po = find_pos(pos, pix, in, 2, 0);
+      po = find_zpos(pos, pix, in, 2, 0);
       if (in[2] == 0)
 	{
 	  save = pos[2];

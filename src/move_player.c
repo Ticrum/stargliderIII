@@ -7,8 +7,8 @@ t_pos move_player(t_pos pos,
 		  float step)
 {
   t_pos newpos;
-  t_pos target;
-  t_pos old_point;
+  //t_pos target;
+  //t_pos old_point;
 
   /*
   if (axe == 'z')

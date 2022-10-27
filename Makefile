@@ -59,7 +59,7 @@ cl:
 	@rm -f $(sta)
 
 .c.o:
-	gcc -c $< $(libpath) -o $@ -fpic $(flag) $(link)
+	gcc -c $< $(libpath) -o $@ -fpic $(flag)
 
 re: cl all
 

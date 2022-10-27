@@ -1,7 +1,7 @@
 {Mesh
   [ 'C1
     Shape = "Triangle"
-    Color = 0, 128, 0
+    Color = 0, 200, 0
     {Coord
       [
 	Position = -10, -10, -5
@@ -17,7 +17,7 @@
   ],
   [ 'C2
     Shape = "Triangle"
-    Color = 0, 100, 0
+    Color = 0, 170, 0
     {Coord
       [
 	Position = -10, -10, -5
@@ -33,7 +33,7 @@
   ],
   [ 'C3
     Shape = "Triangle"
-    Color = 0, 100, 0
+    Color = 0, 170, 0
     {Coord
       [
 	Position = 10, -10, -5
@@ -50,7 +50,7 @@
 
   [ 'A1
     Shape = "Triangle"
-    Color = 0, 180, 0
+    Color = 0, 150, 0
     {Coord
       [
 	Position = -10, -10, -5
@@ -66,7 +66,7 @@
   ],
   [ 'A2
     Shape = "Triangle"
-    Color = 0, 180, 0
+    Color = 0, 150, 0
     {Coord
       [
 	Position = 10, -10, -5
@@ -83,7 +83,7 @@
 
   [ 'B1
     Shape = "Triangle"
-    Color = 0, 160, 0
+    Color = 0, 130, 0
     {Coord
       [
 	Position = 10, -10, -5
@@ -99,7 +99,7 @@
   ],
   [ 'B2
     Shape = "Triangle"
-    Color = 0, 160, 0
+    Color = 0, 130, 0
     {Coord
       [
 	Position = -10, -10, -5
@@ -115,7 +115,7 @@
   ],
   [ 'B3
     Shape = "Triangle"
-    Color = 0, 128, 0
+    Color = 0, 115, 0
     {Coord
       [
 	Position = 10, -10, -5
@@ -131,7 +131,7 @@
   ],
   [ 'B4
     Shape = "Triangle"
-    Color = 0, 128, 0
+    Color = 0, 115, 0
     {Coord
       [
 	Position = 10, -10, -5
