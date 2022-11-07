@@ -11,7 +11,7 @@ t_enemy init_enemy(char *file,
 
     enemy.obj = load_obj(file, nbr_obj, objpos);
     enemy.vect = enemy.obj.position;
-    enemy.vect.z = enemy.vect.z + 7;
+    enemy.vect.z = enemy.vect.z + 10;
     enemy.dmg = dmg;
     enemy.hp = hp;
     enemy.maxhp = hp;

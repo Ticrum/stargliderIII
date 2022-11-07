@@ -35,6 +35,7 @@ typedef struct s_sphere
     int radius;
     int res;
     t_pos **po;
+    unsigned int color;
 }t_sphere;
 
 typedef struct s_enemy
@@ -60,16 +61,27 @@ typedef struct s_player
     int energy;
 }t_player;
 
+typedef struct s_star
+{
+    t_pos *pos;
+    int nbr_star;
+}t_star;
+
 typedef struct s_data
 {
     t_bunny_window *win;
     t_bunny_pixelarray *pix;
     float *zbuffer;
+    t_star star;
     t_obj obj[3];
-    t_sphere sphere[4];
-    t_enemy enemy[3];
+    int nbr_obj;
+    t_sphere sphere[50];
+    int nbr_sphere;
+    t_enemy enemy[200];
+    int nbr_enemy;
     t_player player;
     int score;
+    float foca;
     t_pos rota;
     t_pos move;
 }t_data;
@@ -107,7 +119,8 @@ void std_set_triangle(t_bunny_pixelarray	*pix,
 		      unsigned int		*color,
 		      t_bunny_position		*exept,
 		      int			*empin,
-		      int			recur);
+		      int			recur,
+                      float                     foca);
 
 void std_set_ztriangle(t_bunny_pixelarray	*pix,
                        float                    *zbuffer,
@@ -115,7 +128,8 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
                        unsigned int		*color,
                        t_pos                    *exept,
                        int			*empin,
-                       int			recur);
+                       int			recur,
+                       float                    foca);
 
 t_pos           reduce_zpos(t_pos               *pos,
                             t_bunny_pixelarray	*pix,
@@ -145,13 +159,15 @@ void             std_draw(t_bunny_pixelarray	*pix,
                           float                 *zbuffer,
                           t_obj			*obj,
                           t_pos			rotation,
-                          t_pos			posi);
+                          t_pos			posi,
+                          float                 foca);
 
 void std_draw_static(t_bunny_pixelarray         *pix,
                      float                      *zbuffer,
                      t_obj                      *obj,
                      t_pos                      rotation,
-                     t_pos                      posi);
+                     t_pos                      posi,
+                     float                      foca);
 
 t_pos stdtruerotation(t_pos			target,
 		      t_pos			rotation,
@@ -165,7 +181,8 @@ t_bunny_position std_decal(t_bunny_pixelarray	*pix,
 
 t_bunny_position std_perspective(float		x,
 				 float		y,
-				 float		z);
+				 float		z,
+                                 float          foca);
 
 double	       	std_get_value(double		ratio,
 			      double	       	min,
@@ -185,13 +202,15 @@ void            fire_beam(t_bunny_pixelarray    *pix,
 
 t_sphere        load_sphere(t_pos               pos,
                             int                 radius,
-                            int                 res);
+                            int                 res,
+                            unsigned int        color);
 
 void            draw_sphere(t_bunny_pixelarray	*pix,
                             float               *zbuffer,
                             t_sphere            *sphere,
                             t_pos		rotation,
-                            t_pos		posi);
+                            t_pos		posi,
+                            float               foca);
 
 float           *create_zbuffer(t_bunny_pixelarray *pix);
 
@@ -208,10 +227,10 @@ void            draw_enemy(t_bunny_pixelarray	*pix,
                            float                *zbuffer,
                            t_enemy              *enemy,
                            t_pos		rotation,
-                           t_pos		posi);
+                           t_pos		posi,
+                           float                foca);
 
-void            dmg_enemy(t_bunny_pixelarray    *pix,
-                          t_enemy               *enemy,
+void            dmg_enemy(t_enemy               *enemy,
                           int                   nbr);
 
 void            move_enemy(t_enemy              *enemy,
@@ -227,5 +246,12 @@ void            display_hud(t_data              *data);
 void            respawn_enemy(t_enemy           *enemy,
                               int               len,
                               int               *score);
+
+void            draw_star(t_bunny_pixelarray    *pix,
+                          t_star                *star,
+                          float                 foca);
+
+void            move_star(t_star                *star,
+                          t_pos                 rota);
 
 #endif //	STARGLIDER_H

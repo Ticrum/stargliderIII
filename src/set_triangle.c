@@ -106,7 +106,8 @@ void std_set_triangle(t_bunny_pixelarray	*pix,
 		      unsigned int		*color,
 		      t_bunny_position		*exept,
 		      int			*empin,
-		      int			recur)
+		      int			recur,
+                      float                     foca)
 {
   t_bunny_position posi[5];
   //t_bunny_position recurpos[3];
@@ -114,32 +115,32 @@ void std_set_triangle(t_bunny_pixelarray	*pix,
 
   if (triangle_in_screen(pos) == 1)
     {
-      posi[0] = std_decal(pix, std_perspective(pos[0].x, pos[0].y, pos[0].z));
-      posi[1] = std_decal(pix, std_perspective(pos[1].x, pos[1].y, pos[1].z));
-      posi[2] = std_decal(pix, std_perspective(pos[2].x, pos[2].y, pos[2].z));
-      if (recur == 1)
+        posi[0] = std_decal(pix, std_perspective(pos[0].x, pos[0].y, pos[0].z, foca));
+        posi[1] = std_decal(pix, std_perspective(pos[1].x, pos[1].y, pos[1].z, foca));
+        posi[2] = std_decal(pix, std_perspective(pos[2].x, pos[2].y, pos[2].z, foca));
+        if (recur == 1)
 	{
-	  posi[empin[1]] = exept[1];
-	  posi[empin[0]] = exept[0];
+            posi[empin[1]] = exept[1];
+            posi[empin[0]] = exept[0];
 	}
-      if (is_point_in_screen(posi, pix) != 0)
+        if (is_point_in_screen(posi, pix) != 0)
 	{
-	  //printf("1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
-	  if (is_point_in_screen(posi, pix) == 2)// && recur == 0)
+            //printf("1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
+            if (is_point_in_screen(posi, pix) == 2)// && recur == 0)
 	    {
-	      posi[4] = reduce_pos(posi, pix, emp);
-	      posi[3] = posi[emp[1]];
-	      //printf("exept %d %d emp %d // exept %d %d emp %d\n", posi[3].x, posi[3].y, emp[0], posi[4].x, posi[4].y, emp[1]);
-	      std_set_triangle(pix, pos, color, &posi[3], emp, 1);
+                posi[4] = reduce_pos(posi, pix, emp);
+                posi[3] = posi[emp[1]];
+                //printf("exept %d %d emp %d // exept %d %d emp %d\n", posi[3].x, posi[3].y, emp[0], posi[4].x, posi[4].y, emp[1]);
+                std_set_triangle(pix, pos, color, &posi[3], emp, 1, foca);
 	    }
-	  else if (is_point_in_screen(posi, pix) != 3)
-	    reduce_pos(posi, pix, emp);
-	  //printf("print 1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
-	  posi[3] = posi[0];
-	  std_set_line(pix, &posi[0], color);
-	  std_set_line(pix, &posi[1], color);
-	  std_set_line(pix, &posi[2], color);
-	  fill_triangle(pix, posi, color);
+            else if (is_point_in_screen(posi, pix) != 3)
+                reduce_pos(posi, pix, emp);
+            //printf("print 1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
+            posi[3] = posi[0];
+            std_set_line(pix, &posi[0], color);
+            std_set_line(pix, &posi[1], color);
+            std_set_line(pix, &posi[2], color);
+            fill_triangle(pix, posi, color);
 	}
     }
 }

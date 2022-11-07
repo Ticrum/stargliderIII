@@ -3,7 +3,8 @@
 
 t_sphere load_sphere(t_pos               pos,
                      int                 radius,
-                     int                 res)
+                     int                 res,
+                     unsigned int        color)
 {
     double angle;
     double angle2;
@@ -14,6 +15,7 @@ t_sphere load_sphere(t_pos               pos,
     sphere.pos = pos;
     sphere.radius = radius;
     sphere.res = res;
+    sphere.color = color;
     if ((sphere.po = malloc(sizeof(t_pos *) * (res + 1))) == NULL)
         write(1, "malloc err", 10);
     compt[0] = 0;

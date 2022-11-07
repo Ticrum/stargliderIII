@@ -5,7 +5,8 @@ void draw_enemy(t_bunny_pixelarray	*pix,
                 float                   *zbuffer,
                 t_enemy			*enemy,
                 t_pos			rotation,
-                t_pos			posi)
+                t_pos			posi,
+                float                   foca)
 {
     t_pos pos;
     t_bunny_position poos[3];
@@ -16,16 +17,16 @@ void draw_enemy(t_bunny_pixelarray	*pix,
     pos.z = -800;
     if (enemy->hp > 0)
     {
-        std_draw(pix, zbuffer, &enemy->obj, rotation, posi);
+        std_draw(pix, zbuffer, &enemy->obj, rotation, posi, foca);
         enemy->vect.x = enemy->vect.x + posi.x;
         enemy->vect.y = enemy->vect.y + posi.y;
         enemy->vect.z = enemy->vect.z + posi.z;
         enemy->vect = stdtruerotation(enemy->vect, rotation, pos);
-        poos[0] = std_decal(pix, std_perspective(enemy->vect.x, enemy->vect.y, enemy->vect.z));
+        poos[0] = std_decal(pix, std_perspective(enemy->vect.x, enemy->vect.y, enemy->vect.z, foca));
         //printf("%d %d\n", poos.x, poos.y);
         std_set_pixel(pix, poos[0], BLUE);
 
-        poos[0] = std_decal(pix, std_perspective(enemy->obj.position.x, enemy->obj.position.y, enemy->obj.position.z));
+        poos[0] = std_decal(pix, std_perspective(enemy->obj.position.x, enemy->obj.position.y, enemy->obj.position.z, foca));
         color = RED;
         poos[1].x = poos[0].x - 100;
         poos[1].y = poos[0].y - 50;

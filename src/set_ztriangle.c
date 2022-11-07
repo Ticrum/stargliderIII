@@ -4,7 +4,7 @@
 static int triangle_in_screen(t_pos *pos)
 {
     //printf("%f %f %f\n", pos[0].z, pos[1].z, pos[2].z);
-  if (pos[0].z >= 3500 && pos[1].z >= 3500 && pos[2].z >= 3500)
+  if (pos[0].z >= 6500 && pos[1].z >= 6500 && pos[2].z >= 6500)
     return (0);
   return (1);
 }
@@ -113,7 +113,8 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
                        unsigned int		*color,
                        t_pos                    *exept,
                        int			*empin,
-                       int			recur)
+                       int			recur,
+                       float                    foca)
 {
   t_bunny_position posi[5];
   t_pos po[5];
@@ -123,25 +124,25 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
 
   if (triangle_in_screen(pos) == 1)
     {
-      posi[0] = std_decal(pix, std_perspective(pos[0].x, pos[0].y, pos[0].z));
-      posi[1] = std_decal(pix, std_perspective(pos[1].x, pos[1].y, pos[1].z));
-      posi[2] = std_decal(pix, std_perspective(pos[2].x, pos[2].y, pos[2].z));
-      po[0].x = posi[0].x;
-      po[0].y = posi[0].y;
-      po[0].z = pos[0].z;
-      po[1].x = posi[1].x;
-      po[1].y = posi[1].y;
-      po[1].z = pos[1].z;
-      po[2].x = posi[2].x;
-      po[2].y = posi[2].y;
-      po[2].z = pos[2].z;
-      if (recur == 1)
+        posi[0] = std_decal(pix, std_perspective(pos[0].x, pos[0].y, pos[0].z, foca));
+        posi[1] = std_decal(pix, std_perspective(pos[1].x, pos[1].y, pos[1].z, foca));
+        posi[2] = std_decal(pix, std_perspective(pos[2].x, pos[2].y, pos[2].z, foca));
+        po[0].x = posi[0].x;
+        po[0].y = posi[0].y;
+        po[0].z = pos[0].z;
+        po[1].x = posi[1].x;
+        po[1].y = posi[1].y;
+        po[1].z = pos[1].z;
+        po[2].x = posi[2].x;
+        po[2].y = posi[2].y;
+        po[2].z = pos[2].z;
+        if (recur == 1)
 	{
-	  po[empin[1]] = exept[1];
-	  po[empin[0]] = exept[0];
+            po[empin[1]] = exept[1];
+            po[empin[0]] = exept[0];
 	}
-      inscreen = is_point_in_screen(po, pix);
-      if (inscreen != 0)
+        inscreen = is_point_in_screen(po, pix);
+        if (inscreen != 0)
 	{
             //printf("1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y,
             //posi[1].x, posi[1].y, posi[2].x, posi[2].y);
@@ -151,37 +152,37 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
                 po[4] = reduce_zpos(po, pix, emp);
                 po[3] = po[emp[1]];
                 //printf("exept %d %d emp %d // exept %d %d emp %d\n", posi[3].x, posi[3].y, emp[0], posi[4].x, posi[4].y, emp[1]);
-                std_set_ztriangle(pix, zbuffer, pos, color, &po[3], emp, 1);
+                std_set_ztriangle(pix, zbuffer, pos, color, &po[3], emp, 1, foca);
 	    }
             else if (inscreen != 3)
                 reduce_zpos(po, pix, emp);
 
             if (inscreen != 3)
             {
-                if (po[2].x > 1700)
-                    po[2].x = 1700;
-                else if (po[2].x < -1700)
-                    po[2].x = -1700;
-                if (po[2].y > 1700)
-                    po[2].y = 1700;
-                else if (po[2].y < -1700)
-                    po[2].y = -1700;
-                if (po[1].x > 1700)
-                    po[1].x = 1700;
-                else if (po[1].x < -1700)
-                    po[1].x = -1700;
-                if (po[1].y > 1700)
-                    po[1].y = 1700;
-                else if (po[1].y < -1700)
-                    po[1].y = -1700;
-                if (po[0].x > 1700)
-                    po[0].x = 1700;
-                else if (po[0].x < -1700)
-                    po[0].x = -1700;
-                if (po[0].y > 1700)
-                    po[0].y = 1700;
-                else if (po[0].y < -1700)
-                    po[0].y = -1700;
+                if (po[2].x > pix->clipable.buffer.width * 1.700)
+                    po[2].x = pix->clipable.buffer.width * 1.700;
+                else if (po[2].x < pix->clipable.buffer.width * -1.700)
+                    po[2].x = pix->clipable.buffer.width * -1.700;
+                if (po[2].y > pix->clipable.buffer.height * 1.700)
+                    po[2].y = pix->clipable.buffer.height * 1.700;
+                else if (po[2].y < pix->clipable.buffer.height * -1.700)
+                    po[2].y = pix->clipable.buffer.height * -1.700;
+                if (po[1].x > pix->clipable.buffer.width * 1.700)
+                    po[1].x = pix->clipable.buffer.width * 1.700;
+                else if (po[1].x < pix->clipable.buffer.width * -1.700)
+                    po[1].x = pix->clipable.buffer.width * -1.700;
+                if (po[1].y > pix->clipable.buffer.height * 1.700)
+                    po[1].y = pix->clipable.buffer.height * 1.700;
+                else if (po[1].y < pix->clipable.buffer.height * -1.700)
+                    po[1].y = pix->clipable.buffer.height * -1.700;
+                if (po[0].x > pix->clipable.buffer.width * 1.700)
+                    po[0].x = pix->clipable.buffer.width * 1.700;
+                else if (po[0].x < pix->clipable.buffer.width * -1.700)
+                    po[0].x = pix->clipable.buffer.width * -1.700;
+                if (po[0].y > pix->clipable.buffer.height * 1.700)
+                    po[0].y = pix->clipable.buffer.height * 1.700;
+                else if (po[0].y < pix->clipable.buffer.height * -1.700)
+                    po[0].y = pix->clipable.buffer.height * -1.700;
                 //printf("print 1 %f %f 2 %f %f 3 %f %f\n", po[0].x, po[0].y, po[1].x, po[1].y, po[2].x, po[2].y);
             }
 

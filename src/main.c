@@ -5,6 +5,13 @@ static void player_movement(t_data  *data,
                             t_pos   *move,
                             t_pos   *rota)
 {
+    t_pos pos[2];
+    int x;
+    int y;
+    unsigned int color;
+
+    x = data->pix->clipable.buffer.width;
+    y = data->pix->clipable.buffer.height;
     if (bunny_get_keyboard()[BKS_S])
     {
         data->player.pos.z = data->player.pos.z + 5;
@@ -65,6 +72,57 @@ static void player_movement(t_data  *data,
         data->player.rotation.z = data->player.rotation.z - 0.05;
         rota->z = 0.05;
     }
+    if (bunny_get_keyboard()[BKS_LCONTROL] && data->player.energy > 0)
+    {
+        move->x = move->x * 3;
+        move->y = move->y * 3;
+        move->z = move->z * 3;
+        rota->x = rota->x * 2;
+        rota->y = rota->y * 2;
+        rota->z = rota->z * 2;
+        data->player.energy = data->player.energy - 2;
+        pos[0].x = x * 0.5 + y * -0.081;
+        pos[0].y = y * 0.68;//500;
+        pos[0].z = -900;
+        pos[1].x = x * 0.5 + y * -0.05;//445;
+        pos[1].y = y * 0.63;// + 145;
+        pos[1].z = -900;
+        color = PURPLE;
+        fire_beam(data->pix, data->zbuffer, pos, &color);
+        pos[0].x = x * 0.5 + y * 0.081;
+        pos[0].y = y * 0.68;//500;
+        pos[0].z = -900;
+        pos[1].x = x * 0.5 + y * 0.05;
+        pos[1].y = y * 0.63;// + 145;
+        pos[1].z = -900;
+        fire_beam(data->pix, data->zbuffer, pos, &color);
+    }
+}
+
+static void all_enemy(t_data *data)
+{
+    int compt;
+
+    compt = 0;
+    while (compt < data->nbr_enemy)
+    {
+        move_enemy(&data->enemy[compt], data->rota);
+        draw_enemy(data->pix, data->zbuffer, &data->enemy[compt], data->rota, data->move, data->foca);
+        compt = compt + 1;
+    }
+}
+
+static void all_sphere(t_data *data)
+{
+    int compt;
+
+    compt = 0;
+    while (compt < data->nbr_sphere)
+    {
+        draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->rota, data->move, data->foca);
+        compt = compt + 1;
+    }
+    //draw_sphere(data->pix, data->zbuffer, &data->sphere[14], data->rota, data->move);
 }
 
 static t_bunny_response display(void *data2)
@@ -72,32 +130,22 @@ static t_bunny_response display(void *data2)
     t_data *data;
 
     data = (t_data *)data2;
-    std_draw(data->pix, data->zbuffer, &data->obj[0], data->rota, data->move);
-    move_enemy(&data->enemy[0], data->rota);
-    move_enemy(&data->enemy[1], data->rota);
-    move_enemy(&data->enemy[2], data->rota);
-    dmg_player(data, 3);
+    draw_star(data->pix, &data->star, data->foca);
+    move_star(&data->star, data->rota);
+    std_draw(data->pix, data->zbuffer, &data->obj[0], data->rota, data->move, data->foca);
 
+    dmg_player(data, data->nbr_enemy);
+    all_sphere(data);
+    all_enemy(data);
 
-    draw_sphere(data->pix, data->zbuffer, &data->sphere[0], data->rota, data->move);
-    draw_sphere(data->pix, data->zbuffer, &data->sphere[1], data->rota, data->move);
-    draw_sphere(data->pix, data->zbuffer, &data->sphere[2], data->rota, data->move);
-    //draw_sphere(data->pix, data->zbuffer, &data->sphere[3], data->rota, data->move);
-
-    draw_enemy(data->pix, data->zbuffer, &data->enemy[0], data->rota, data->move);
-    draw_enemy(data->pix, data->zbuffer, &data->enemy[1], data->rota, data->move);
-    draw_enemy(data->pix, data->zbuffer, &data->enemy[2], data->rota, data->move);
 
     data->obj[2].position.x = 0;//-data->pos.x;
-    data->obj[2].position.y = 5;//300 * (1 - (data->pix->clipable.buffer.height / 1000.0)) + 5;//data->pix->clipable.buffer.height
-                                                                                           //*
-                                                                                           //0.1;//5;
-    //printf("%f\n", data->obj[2].position.y);
+    data->obj[2].position.y = 5;//300 * (1 - (data->p    //printf("%f\n", data->obj[2].position.y);
     data->obj[2].position.z = -520;//data->pix->clipable.buffer.height * -0.520;//-550;
     data->rota.x = 0.5;
     data->rota.y = 0;
     data->rota.z = 0;//0.5;
-    std_draw_static(data->pix, data->zbuffer, &data->obj[2], data->rota, data->obj[2].position);
+    std_draw_static(data->pix, data->zbuffer, &data->obj[2], data->rota, data->obj[2].position, data->foca);
     //printf("%f %f %f\n", data->rotation.x / M_PI * 180.0, data->rotation.y /
     //M_PI * 180.0, data->rotation.z / M_PI * 180.0);
     display_hud(data);
@@ -116,10 +164,10 @@ static t_bunny_response std_affiche(void *data2)
 
   data = (t_data *)data2;
   std_clear_pixelarray(data->pix, BLACK);
-
+  //write(1,"a",1);
   x = data->pix->clipable.buffer.width;
   y = data->pix->clipable.buffer.height;
-  respawn_enemy(data->enemy, 3, &data->score);
+  respawn_enemy(data->enemy, data->nbr_enemy, &data->score);
 
   if (data->player.hp < 0)
       return (EXIT_ON_SUCCESS);
@@ -137,18 +185,22 @@ static t_bunny_response std_affiche(void *data2)
       pos[0].x = x * 0.5;//500;
       pos[0].y = y * 0.5;//500;
       pos[0].z = 400;
-      pos[1].x = x * 0.445;//445;
-      pos[1].y = y * 0.645;
+      pos[1].x = x * 0.5 + y * -0.15;//445;
+      pos[1].y = y * 0.645;// + 145;
       pos[1].z = -800;
       color = PURPLE;
       fire_beam(data->pix, data->zbuffer, pos, &color);
-      pos[1].x = x * 0.555;
-      pos[1].y = y * 0.645;
+      pos[1].x = x * 0.5 + y * 0.15;
+      pos[1].y = y * 0.645;// + 145;
       pos[1].z = -800;
       fire_beam(data->pix, data->zbuffer, pos, &color);
-      dmg_enemy(data->pix, data->enemy, 3);
+      dmg_enemy(data->enemy, data->nbr_enemy);
       data->player.energy = data->player.energy - 3;
   }
+  if (bunny_get_keyboard()[BKS_UP])
+      data->foca = data->foca + 5;
+  if (bunny_get_keyboard()[BKS_DOWN])
+      data->foca = data->foca - 5;
   if (data->player.energy < data->player.maxenergy)
       data->player.energy = data->player.energy + 1;
 
@@ -170,10 +222,9 @@ static t_bunny_response std_stop(t_bunny_event_state state,
 int main(void)
 {
   t_data data;
-  //t_pos pos;
 
   data = init_game();
-  //write(1,"a",1);
+  printf("Game started\n");
   bunny_set_loop_main_function(std_affiche);
   bunny_set_key_response(std_stop);
   bunny_set_display_function(display);

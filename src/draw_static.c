@@ -5,7 +5,8 @@ void std_draw_static(t_bunny_pixelarray	*pix,
                      float              *zbuffer,
                      t_obj		*obj,
                      t_pos		rotation,
-                     t_pos		posi)
+                     t_pos		posi,
+                     float              foca)
 {
   int compt;
   int compt2;
@@ -56,7 +57,7 @@ void std_draw_static(t_bunny_pixelarray	*pix,
         obj->pos[compt2 + 1] = pos[1];
         obj->pos[compt2 + 2] = pos[2];
 */
-        std_set_ztriangle(pix, zbuffer, pos, &obj->color[compt].full, NULL, &compt, 0);
+        std_set_ztriangle(pix, zbuffer, pos, &obj->color[compt].full, NULL, &compt, 0, foca);
         compt = compt + 1;
         compt2 = compt2 + 3;
     }
