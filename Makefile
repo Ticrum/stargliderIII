@@ -1,4 +1,4 @@
-out=volume
+out=stargliderIII
 src=$(shell find src/ -name "*.c")
 header=$(shell find include -name "*.h")
 obj=$(src:.c=.o)

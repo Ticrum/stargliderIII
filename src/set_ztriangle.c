@@ -3,7 +3,8 @@
 
 static int triangle_in_screen(t_pos *pos)
 {
-  if (pos[0].z <= -999 || pos[1].z <= -999 || pos[2].z <= -999)
+    //printf("%f %f %f\n", pos[0].z, pos[1].z, pos[2].z);
+  if (pos[0].z >= 3500 && pos[1].z >= 3500 && pos[2].z >= 3500)
     return (0);
   return (1);
 }
@@ -87,7 +88,7 @@ static void fill_triangle(t_bunny_pixelarray	*pix,
 	  temppos[1].x = std_get_value(ratio2[0], posi[0].x, posi[2].x);
           temppos[1].z = std_get_value(ratio2[0], posi[0].z, posi[2].z);
 	  temppos[1].y = compt[0];
-	  std_set_zline(pix, zbuffer, temppos, color);
+	  std_set_z_speed_line(pix, zbuffer, temppos, color);
 	}
       if (compt[1] >= posi[1].y)
 	{
@@ -97,7 +98,7 @@ static void fill_triangle(t_bunny_pixelarray	*pix,
 	  temppos[1].x = std_get_value(ratio2[1], posi[3].x, posi[2].x);
           temppos[0].z = std_get_value(ratio2[1], posi[3].z, posi[2].z);
 	  temppos[1].y = compt[1];
-	  std_set_zline(pix, zbuffer, temppos, color);
+	  std_set_z_speed_line(pix, zbuffer, temppos, color);
 	}
       ratio2[0] = ratio2[0] + up[0];
       ratio2[1] = ratio2[1] + up[1];
@@ -118,6 +119,7 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
   t_pos po[5];
   //t_bunny_position recurpos[3];
   int emp[2];
+  int inscreen;
 
   if (triangle_in_screen(pos) == 1)
     {
@@ -138,24 +140,56 @@ void std_set_ztriangle(t_bunny_pixelarray	*pix,
 	  po[empin[1]] = exept[1];
 	  po[empin[0]] = exept[0];
 	}
-      if (is_point_in_screen(po, pix) != 0)
+      inscreen = is_point_in_screen(po, pix);
+      if (inscreen != 0)
 	{
-            //printf("1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
-	  if (is_point_in_screen(po, pix) == 2)// && recur == 0)
+            //printf("1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y,
+            //posi[1].x, posi[1].y, posi[2].x, posi[2].y);
+
+            if (inscreen == 2)// && recur == 0)
 	    {
-	      po[4] = reduce_zpos(po, pix, emp);
-	      po[3] = po[emp[1]];
-	      //printf("exept %d %d emp %d // exept %d %d emp %d\n", posi[3].x, posi[3].y, emp[0], posi[4].x, posi[4].y, emp[1]);
-	      std_set_ztriangle(pix, zbuffer, pos, color, &po[3], emp, 1);
+                po[4] = reduce_zpos(po, pix, emp);
+                po[3] = po[emp[1]];
+                //printf("exept %d %d emp %d // exept %d %d emp %d\n", posi[3].x, posi[3].y, emp[0], posi[4].x, posi[4].y, emp[1]);
+                std_set_ztriangle(pix, zbuffer, pos, color, &po[3], emp, 1);
 	    }
-	  else if (is_point_in_screen(po, pix) != 3)
-	    reduce_zpos(po, pix, emp);
-	  //printf("print 1 %d %d 2 %d %d 3 %d %d\n", posi[0].x, posi[0].y, posi[1].x, posi[1].y, posi[2].x, posi[2].y);
+            else if (inscreen != 3)
+                reduce_zpos(po, pix, emp);
+
+            if (inscreen != 3)
+            {
+                if (po[2].x > 1700)
+                    po[2].x = 1700;
+                else if (po[2].x < -1700)
+                    po[2].x = -1700;
+                if (po[2].y > 1700)
+                    po[2].y = 1700;
+                else if (po[2].y < -1700)
+                    po[2].y = -1700;
+                if (po[1].x > 1700)
+                    po[1].x = 1700;
+                else if (po[1].x < -1700)
+                    po[1].x = -1700;
+                if (po[1].y > 1700)
+                    po[1].y = 1700;
+                else if (po[1].y < -1700)
+                    po[1].y = -1700;
+                if (po[0].x > 1700)
+                    po[0].x = 1700;
+                else if (po[0].x < -1700)
+                    po[0].x = -1700;
+                if (po[0].y > 1700)
+                    po[0].y = 1700;
+                else if (po[0].y < -1700)
+                    po[0].y = -1700;
+                //printf("print 1 %f %f 2 %f %f 3 %f %f\n", po[0].x, po[0].y, po[1].x, po[1].y, po[2].x, po[2].y);
+            }
+
             po[3] = po[0];
-	  std_set_zline(pix, zbuffer, &po[0], color);
-	  std_set_zline(pix, zbuffer, &po[1], color);
-	  std_set_zline(pix, zbuffer, &po[2], color);
-	  fill_triangle(pix, zbuffer, po, color);
+            std_set_zline(pix, zbuffer, &po[0], color);
+            std_set_zline(pix, zbuffer, &po[1], color);
+            std_set_zline(pix, zbuffer, &po[2], color);
+            fill_triangle(pix, zbuffer, po, color);
 	}
     }
 }

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <lapin.h>
+#include <time.h>
 
 typedef struct s_pos
 {
@@ -41,23 +42,36 @@ typedef struct s_enemy
     t_obj obj;
     t_pos vect;
     int dmg;
+    int maxhp;
     int hp;
     t_pos speed;
     t_pos rota_speed;
 }t_enemy;
 
-typedef struct s_data
+typedef struct s_player
 {
-    t_bunny_window *win;
-    t_bunny_pixelarray *pix;
-    t_obj obj[3];
-    t_sphere sphere[3];
-    t_enemy enemy[3];
     t_pos pos;
     t_pos tpos;
     t_pos rotation;
     t_pos vect;
+    int maxhp;
+    int hp;
+    int maxenergy;
+    int energy;
+}t_player;
+
+typedef struct s_data
+{
+    t_bunny_window *win;
+    t_bunny_pixelarray *pix;
     float *zbuffer;
+    t_obj obj[3];
+    t_sphere sphere[4];
+    t_enemy enemy[3];
+    t_player player;
+    int score;
+    t_pos rota;
+    t_pos move;
 }t_data;
 
 double std_abs(double				nbr);
@@ -75,10 +89,15 @@ void std_set_line(t_bunny_pixelarray		*px,
 		  t_bunny_position		*pos,
 		  unsigned int			*color);
 
-void std_set_zline(t_bunny_pixelarray	*px,
-                   float                *zbuffer,
-                   t_pos                *pos,
-                   unsigned int		*color);
+void std_set_zline(t_bunny_pixelarray           *px,
+                   float                        *zbuffer,
+                   t_pos                        *pos,
+                   unsigned int                 *color);
+
+void std_set_z_speed_line(t_bunny_pixelarray	*px,
+                          float                 *zbuffer,
+                          t_pos                 *pos,
+                          unsigned int		*color);
 
 void std_clear_pixelarray(t_bunny_pixelarray	*pix,
 			  unsigned int		color);
@@ -156,11 +175,6 @@ double		std_get_ratio(double		max,
 			      double		min,
 			      double		curr);
 
-t_pos		move_player(t_pos		pos,
-			    t_pos		angle,
-			    char		axe,
-			    float		step);
-
 t_pos           rotate_player(t_pos             vect,
                               t_pos             rota);
 
@@ -197,13 +211,21 @@ void            draw_enemy(t_bunny_pixelarray	*pix,
                            t_pos		posi);
 
 void            dmg_enemy(t_bunny_pixelarray    *pix,
-                          t_pos                 pos,
-                          t_pos                 vect,
                           t_enemy               *enemy,
                           int                   nbr);
 
 void            move_enemy(t_enemy              *enemy,
-                           t_pos                rota,
-                           t_pos                cpos);
+                           t_pos                rota);
+
+t_data          init_game(void);
+
+void            dmg_player(t_data               *data,
+                           int                  len);
+
+void            display_hud(t_data              *data);
+
+void            respawn_enemy(t_enemy           *enemy,
+                              int               len,
+                              int               *score);
 
 #endif //	STARGLIDER_H
