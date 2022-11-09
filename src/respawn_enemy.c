@@ -10,7 +10,7 @@ void respawn_enemy(t_enemy  *enemy,
     int compt2;
     t_pos posi;
 
-    srand(time(NULL));
+    //srand(time(NULL));
     compt3 = 0;
     while (compt3 < len)
     {

@@ -13,7 +13,7 @@ void dmg_player(t_data  *data,
         if ((data->enemy[compt].obj.position.x > -60 && data->enemy[compt].obj.position.x < 60) &&
             (data->enemy[compt].obj.position.y > -20 && data->enemy[compt].obj.position.y < 100) &&
             (data->enemy[compt].obj.position.z > -860 && data->enemy[compt].obj.position.z < -740))
-            data->player.hp = data->player.hp - 1;
+            data->player.hp = data->player.hp - data->enemy[compt].dmg;
         compt = compt + 1;
     }
 }

@@ -4,7 +4,7 @@
 static int triangle_in_screen(t_pos *pos)
 {
     //printf("%f %f %f\n", pos[0].z, pos[1].z, pos[2].z);
-  if (pos[0].z >= 6500 && pos[1].z >= 6500 && pos[2].z >= 6500)
+  if (pos[0].z >= 15000 && pos[1].z >= 15000 && pos[2].z >= 15000)
     return (0);
   return (1);
 }

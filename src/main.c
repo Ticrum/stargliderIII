@@ -110,6 +110,16 @@ static void all_enemy(t_data *data)
         draw_enemy(data->pix, data->zbuffer, &data->enemy[compt], data->rota, data->move, data->foca);
         compt = compt + 1;
     }
+    compt = 0;
+    while (compt < data->nbr_turret)
+    {
+        move_turret(&data->turret[compt], data->rota);
+        draw_turret(data->pix, data->zbuffer, &data->turret[compt], data->rota, data->move, data->foca);
+        fire_turret_proj(&data->turret[compt]);
+        move_proj(data->turret[compt].proj, 50);
+        draw_proj(data->pix, data->turret[compt].proj, data->zbuffer, data->rota, data->move, data->foca, 50);
+        compt = compt + 1;
+    }
 }
 
 static void all_sphere(t_data *data)
@@ -135,9 +145,13 @@ static t_bunny_response display(void *data2)
     std_draw(data->pix, data->zbuffer, &data->obj[0], data->rota, data->move, data->foca);
 
     dmg_player(data, data->nbr_enemy);
+    dmg_player_proj(data, 50);
+
     all_sphere(data);
     all_enemy(data);
 
+    move_proj(data->player.proj, 50);
+    draw_proj(data->pix, data->player.proj, data->zbuffer, data->rota, data->move, data->foca, 50);
 
     data->obj[2].position.x = 0;//-data->pos.x;
     data->obj[2].position.y = 5;//300 * (1 - (data->p    //printf("%f\n", data->obj[2].position.y);
@@ -180,40 +194,69 @@ static t_bunny_response std_affiche(void *data2)
   clear_zbuffer(data->zbuffer, data->pix);
 
   player_movement(data, &data->move, &data->rota);
+
   if (bunny_get_keyboard()[BKS_SPACE] && data->player.energy > 0)
   {
-      pos[0].x = x * 0.5;//500;
-      pos[0].y = y * 0.5;//500;
-      pos[0].z = 400;
-      pos[1].x = x * 0.5 + y * -0.15;//445;
-      pos[1].y = y * 0.645;// + 145;
-      pos[1].z = -800;
-      color = PURPLE;
-      fire_beam(data->pix, data->zbuffer, pos, &color);
-      pos[1].x = x * 0.5 + y * 0.15;
-      pos[1].y = y * 0.645;// + 145;
-      pos[1].z = -800;
-      fire_beam(data->pix, data->zbuffer, pos, &color);
-      dmg_enemy(data->enemy, data->nbr_enemy);
-      data->player.energy = data->player.energy - 3;
+      if (data->mode == false)
+      {
+          pos[0].x = x * 0.5;//500;
+          pos[0].y = y * 0.5;//500;
+          pos[0].z = 400;
+          pos[1].x = x * 0.5 + y * -0.15;//445;
+          pos[1].y = y * 0.645;// + 145;
+          pos[1].z = -800;
+          color = PURPLE;
+          fire_beam(data->pix, data->zbuffer, pos, &color);
+          pos[1].x = x * 0.5 + y * 0.15;
+          pos[1].y = y * 0.645;// + 145;
+          pos[1].z = -800;
+          fire_beam(data->pix, data->zbuffer, pos, &color);
+          data->player.energy = data->player.energy - 3;
+      }
+      else if (data->player.ammo > 0 && data->player.r == false)
+      {
+          fire_proj(&data->player);
+          data->player.ammo = data->player.ammo - 2;
+      }
+      dmg_enemy(data->enemy, data->player.proj, data->nbr_enemy, data->mode);
   }
   if (bunny_get_keyboard()[BKS_UP])
       data->foca = data->foca + 5;
   if (bunny_get_keyboard()[BKS_DOWN])
       data->foca = data->foca - 5;
+
   if (data->player.energy < data->player.maxenergy)
       data->player.energy = data->player.energy + 1;
+
+  if (data->player.ammo <= 0)
+      data->player.r = true;
+  if (data->player.ammo < data->player.maxammo && data->player.r == true)
+      data->player.ammo = data->player.ammo + 1;
+  if (data->player.ammo >= data->player.maxammo)
+      data->player.r = false;
 
   return (GO_ON);
 }
 
 static t_bunny_response std_stop(t_bunny_event_state state,
 				 t_bunny_keysym keycode,
-				 void * data)
+				 void * data2)
 {
-  (void)data;
+  t_data *data;
+
+  data = (t_data *)data2;
   if (state == GO_UP)
     return (GO_ON);
+  if (keycode == BKS_R)
+      data->player.r = true;
+  if (keycode == BKS_F)
+  {
+      if (data->mode == false)
+          data->mode = true;
+      else
+          data->mode = false;
+      //printf("%d\n", data->mode);
+  }
   if (keycode == BKS_ESCAPE)
     return (EXIT_ON_SUCCESS);
   return (GO_ON);
@@ -221,6 +264,8 @@ static t_bunny_response std_stop(t_bunny_event_state state,
 
 int main(void)
 {
+    printf("%zu\n", sizeof(t_data));
+    //return (0);
   t_data data;
 
   data = init_game();
@@ -231,6 +276,7 @@ int main(void)
   bunny_loop(data.win, 60, (void *)&data);
   bunny_stop(data.win);
   printf("%d\n", data.score);
+  free_game(data);
   return (0);
 }
 

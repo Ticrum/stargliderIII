@@ -1,0 +1,131 @@
+{Mesh
+  [ 'C1
+    Shape = "Triangle"
+    Color = 0, 120, 0
+    {Coord
+      [
+	Position = -20, 20, -20
+      ],
+      [
+	Position = 20, 20, -20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -20, 20, 20
+      ]
+    }
+  ],
+  [ 'C2
+    Shape = "Triangle"
+    Color = 0, 120, 0
+    {Coord
+      [
+	Position = 20, 20, 20
+      ],
+      [
+	Position = 20, 20, -20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -20, 20, 20
+      ]
+    }
+  ],
+  [ 'C3
+    Shape = "Triangle"
+    Color = 0, 200, 0
+    {Coord
+      [
+	Position = -20, -20, -20
+      ],
+      [
+	Position = 20, -20, -20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -20, -20, 20
+      ]
+    }
+  ],
+  [ 'C4
+    Shape = "Triangle"
+    Color = 0, 200, 0
+    {Coord
+      [
+	Position = 20, -20, 20
+      ],
+      [
+	Position = 20, -20, -20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = -20, -20, -20
+      ]
+    }
+  ],
+
+  [ 'F1
+    Shape = "Triangle"
+    Color = 0, 150, 150
+    {Coord
+      [
+	Position = 0, 0, 50
+      ],
+      [
+	Position = -20, 20, 20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 0, 20, 20
+      ]
+    }
+  ],
+  [ 'F2
+    Shape = "Triangle"
+    Color = 0, 155, 0
+    {Coord
+      [
+	Position = 0, 0, 50
+      ],
+      [
+	Position = 20, 20, 20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 0, 20, 20
+      ]
+    }
+  ],
+  [ 'F3
+    Shape = "Triangle"
+    Color = 0, 180, 0
+    {Coord
+      [
+	Position = 0, 0, 50
+      ],
+      [
+	Position = -20, -20, 20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 0, -20, 20
+      ]
+    }
+  ],
+  [ 'F4
+    Shape = "Triangle"
+    Color = 0, 185, 150
+    {Coord
+      [
+	Position = 0, 0, 50
+      ],
+      [
+	Position = 20, -20, 20
+	Color = 0, 64, 0
+      ],
+      [
+	Position = 0, -20, 20
+      ]
+    }
+  ]
+}
