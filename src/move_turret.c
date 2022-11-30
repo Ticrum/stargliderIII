@@ -15,13 +15,19 @@ static t_pos choose_rota(t_turret *turret)
 }
 
 void move_turret(t_turret     *turret,
-                 t_pos        rota)
+                 t_pos        rota,
+                 t_pos        rotation,
+                 t_pos        posi)
 {
     t_pos pos;
+    t_pos campos;
     //t_pos posi;
     int compt;
     int compt2;
 
+    campos.x = 0;
+    campos.y = 40;
+    campos.z = -800;
     if (turret->hp > 0)
     {
           compt = 0;
@@ -41,6 +47,9 @@ void move_turret(t_turret     *turret,
               compt = compt + 1;
               compt2 = compt2 + 3;
           }
+          std_move(&turret->obj, rotation, posi);
+          turret->vect = add_pos(turret->vect, posi);
+          turret->vect = stdtruerotation(turret->vect, rotation, campos);
     }
 }
 

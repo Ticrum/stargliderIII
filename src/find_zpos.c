@@ -23,6 +23,7 @@ t_pos find_zpos(t_pos                   *pos,
     }
   po[0].x = 10000;
   po[0].y = 10000;
+  po[0].z = 10000;
   if (posi[1].y <= 0)
   {
       po[0].x = std_get_value(std_get_ratio(posi[1].y, posi[0].y, 0), posi[0].x, posi[1].x);
@@ -37,6 +38,7 @@ t_pos find_zpos(t_pos                   *pos,
   }
   po[1].x = 10000;
   po[1].y = 10000;
+  po[1].z = 10000;
   if (posi[1].x <= 0)
   {
       po[1].y = std_get_value(std_get_ratio(posi[1].x, posi[0].x, 0), posi[0].y, posi[1].y);

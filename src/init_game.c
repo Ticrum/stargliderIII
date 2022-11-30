@@ -31,20 +31,13 @@ static void init_star(t_data *data)
     }
 }
 
-static void init_world(t_data *data)
+static void init_stats(t_data *data)
 {
-    t_pos pos;
     int resox;
     int resoy;
-    int compt;
 
-    printf("loading world...\n");
     resox = 1280;//1280
     resoy = 720;//720
-    pos.x = 0;//-10;
-    pos.y = 0;//20;
-    pos.z = 1;//-400;
-
     data->player.hp = 1000;
     data->player.maxhp = 1000;
     data->player.energy = 100;
@@ -52,16 +45,15 @@ static void init_world(t_data *data)
     data->player.maxammo = 180;
     data->player.ammo = 180;
     data->player.r = false;
-    init_proj(data);
 
     data->player.pos.z = 1;
     data->player.pos.y = 0;
     data->player.pos.x = 0;
+    data->player.vect = data->player.pos;
     data->player.tpos = data->player.pos;
     data->player.rotation.x = 0;
     data->player.rotation.y = 0;
     data->player.rotation.z = 0;
-    data->player.vect = pos;
 
     data->mode = 0;
     data->score = 0;
@@ -69,12 +61,25 @@ static void init_world(t_data *data)
     data->win = bunny_start(resox, resoy, false, "Bunny");
     data->pix = bunny_new_pixelarray(resox, resoy);
     data->zbuffer = create_zbuffer(data->pix);
+}
+
+static void init_world(t_data *data)
+{
+    t_pos pos;
+    int compt;
+
+    printf("loading world...\n");
+    pos.x = 0;//-10;
+    pos.y = 0;//20;
+    pos.z = 1;//-400;
+
     data->obj[0] = load_obj("test_space.dab", 17, pos);
     pos.x = 0;
     pos.y = 0;
     pos.z = 0;
     data->obj[1] = load_obj("test.dab", 3, pos);
 
+    init_proj(data);
     data->nbr_sphere = 50;
     compt = 0;
     while (compt < data->nbr_sphere)
@@ -86,12 +91,7 @@ static void init_world(t_data *data)
         printf("%d / %d\r", compt + 1, data->nbr_sphere);
         compt = compt + 1;
     }
-    /*
-    pos.x = 0;
-    pos.y = 0;
-    pos.z = -7000;
-    data->sphere[14] = load_sphere(pos, 1000, 12, YELLOW);//rand() % 300 + 50
-    */
+
     pos.x = 0;
     pos.y = 30;
     pos.z = -300;
@@ -106,11 +106,12 @@ t_data init_game(void)
 
     srand(time(NULL));
     printf("Start loading...\n\n");
+    init_stats(&data);
     init_world(&data);
     printf("\nDone\n\n");
     init_star(&data);
-    data.nbr_enemy = 5;
     printf("loading enemy...\n");
+    data.nbr_enemy = 5;
     compt = 0;
     while (compt < data.nbr_enemy)
     {
@@ -122,7 +123,7 @@ t_data init_game(void)
         compt = compt + 1;
     }
 
-    data.nbr_turret = 3;
+    data.nbr_turret = 2;
     compt = 0;
     while (compt < data.nbr_turret)
     {
@@ -131,6 +132,18 @@ t_data init_game(void)
         pos.z = 0 + (rand() % 3000 - 1500);//-400;
         data.turret[compt] = init_turret("turret.dab", 8, pos, 5, 100, 2);
         printf("%d / %d\r", compt + 1 + data.nbr_enemy, data.nbr_enemy + data.nbr_turret);
+        compt = compt + 1;
+    }
+
+    data.nbr_boss = 3;
+    compt = 0;
+    while (compt < data.nbr_boss)
+    {
+        pos.x = 100 + (rand() % 5000 - 2500);//-10;
+        pos.y = 50 + (rand() % 5000 - 2500);//20;
+        pos.z = 0 + (rand() % 5000 - 2500);//-400;
+        data.boss[compt] = init_boss("boss.dab", 17, pos, 8, 2000);
+        //printf("%d / %d\r", compt + 1 + data.nbr_enemy, data.nbr_enemy + data.nbr_turret);
         compt = compt + 1;
     }
 

@@ -4,26 +4,15 @@
 void draw_enemy(t_bunny_pixelarray	*pix,
                 float                   *zbuffer,
                 t_enemy			*enemy,
-                t_pos			rotation,
-                t_pos			posi,
                 float                   foca)
 {
-    t_pos pos;
     t_bunny_position poos[3];
     unsigned int color;
 
-    pos.x = 0;
-    pos.y = 40;
-    pos.z = -800;
     if (enemy->hp > 0)
     {
-        std_draw(pix, zbuffer, &enemy->obj, rotation, posi, foca);
-        enemy->vect.x = enemy->vect.x + posi.x;
-        enemy->vect.y = enemy->vect.y + posi.y;
-        enemy->vect.z = enemy->vect.z + posi.z;
-        enemy->vect = stdtruerotation(enemy->vect, rotation, pos);
+        std_draw(pix, zbuffer, &enemy->obj, foca);
         poos[0] = std_decal(pix, std_perspective(enemy->vect.x, enemy->vect.y, enemy->vect.z, foca));
-        //printf("%d %d\n", poos.x, poos.y);
         std_set_pixel(pix, poos[0], BLUE);
 
         poos[0] = std_decal(pix, std_perspective(enemy->obj.position.x, enemy->obj.position.y, enemy->obj.position.z, foca));

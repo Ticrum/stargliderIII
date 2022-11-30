@@ -20,7 +20,7 @@ static int hit_enemy_proj(t_enemy   enemy,
     float hitsize;
     int compt;
 
-    hitsize = 50;
+    hitsize = 80;
     compt = 0;
     while (compt < 50)
     {

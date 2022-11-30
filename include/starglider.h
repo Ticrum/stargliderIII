@@ -72,6 +72,17 @@ typedef struct s_turret
     int rofc;
 }t_turret;
 
+typedef struct s_boss
+{
+    t_obj obj;
+    t_pos vect;
+    int dmg;
+    int maxhp;
+    int hp;
+    t_turret turret[10];
+    int nbr_turret;
+}t_boss;
+
 typedef struct s_player
 {
     t_pos pos;
@@ -109,12 +120,17 @@ typedef struct s_data
     int nbr_enemy;
     t_turret turret[100];
     int nbr_turret;
+    t_boss boss[10];
+    int nbr_boss;
     t_player player;
     int score;
     float foca;
     t_pos rota;
     t_pos move;
     int mode;
+    double fps;
+    int compt;
+    double time;
 }t_data;
 
 double std_abs(double				nbr);
@@ -189,8 +205,6 @@ t_obj            load_obj(char          	*file,
 void             std_draw(t_bunny_pixelarray	*pix,
                           float                 *zbuffer,
                           t_obj			*obj,
-                          t_pos			rotation,
-                          t_pos			posi,
                           float                 foca);
 
 void std_draw_static(t_bunny_pixelarray         *pix,
@@ -239,8 +253,6 @@ t_sphere        load_sphere(t_pos               pos,
 void            draw_sphere(t_bunny_pixelarray	*pix,
                             float               *zbuffer,
                             t_sphere            *sphere,
-                            t_pos		rotation,
-                            t_pos		posi,
                             float               foca);
 
 float           *create_zbuffer(t_bunny_pixelarray *pix);
@@ -257,8 +269,6 @@ t_enemy         init_enemy(char                 *file,
 void            draw_enemy(t_bunny_pixelarray	*pix,
                            float                *zbuffer,
                            t_enemy              *enemy,
-                           t_pos		rotation,
-                           t_pos		posi,
                            float                foca);
 
 void            dmg_enemy(t_enemy               *enemy,
@@ -267,7 +277,9 @@ void            dmg_enemy(t_enemy               *enemy,
                           int                   mode);
 
 void            move_enemy(t_enemy              *enemy,
-                           t_pos                rota);
+                           t_pos                rota,
+                           t_pos                rotation,
+                           t_pos                posi2);
 
 t_data          init_game(void);
 
@@ -290,13 +302,13 @@ void            move_star(t_star                *star,
 void            fire_proj(t_player              *player);
 
 void            move_proj(t_proj                *proj,
-                          int                   len);
+                          int                   len,
+                          t_pos                 rota,
+                          t_pos                 posi2);
 
 void            draw_proj(t_bunny_pixelarray    *pix,
                           t_proj                *proj,
                           float                 *zbuffer,
-                          t_pos                 rota,
-                          t_pos                 posi,
                           float                 foca,
                           int                   len);
 
@@ -310,12 +322,12 @@ t_turret        init_turret(char                *file,
 void            draw_turret(t_bunny_pixelarray	*pix,
                             float               *zbuffer,
                             t_turret		*turret,
-                            t_pos		rotation,
-                            t_pos		posi,
                             float               foca);
 
 void            move_turret(t_turret            *turret,
-                            t_pos               rota);
+                            t_pos               rota,
+                            t_pos               rotation,
+                            t_pos               posi);
 
 void            fire_turret_proj(t_turret       *turret);
 
@@ -323,5 +335,38 @@ void            dmg_player_proj(t_data          *data,
                                 int             len);
 
 void            free_game(t_data                data);
+
+t_pos           add_pos(t_pos                   pos,
+                        t_pos                   up);
+
+void            std_move(t_obj			*obj,
+                         t_pos			rotation,
+                         t_pos			posi);
+
+void            move_sphere(t_sphere            *sphere,
+                            t_pos               rotation,
+                            t_pos               posi);
+
+t_boss          init_boss(char                  *file,
+                          int                   nbr_obj,
+                          t_pos                 objpos,
+                          int                   dmg,
+                          int                   hp);
+
+void            draw_boss(t_bunny_pixelarray    *pix,
+                          float                 *zbuffer,
+                          t_boss                *boss,
+                          float                 foca);
+
+void            move_boss(t_boss                *boss,
+                          t_pos                 rota,
+                          t_pos                 rotation,
+                          t_pos                 posi2);
+
+void            dmg_boss(t_boss                 *boss,
+                         t_proj                 *proj,
+                         int                    nbr,
+                         int                    mode,
+                         int                    *score);
 
 #endif //	STARGLIDER_H

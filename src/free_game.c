@@ -1,6 +1,6 @@
 
 #include <starglider.h>
-
+/*
 static void free_obj(t_data data)
 {
     int compt;
@@ -12,7 +12,7 @@ static void free_obj(t_data data)
         compt = compt + 1;
     }
 }
-
+*/
 void free_game(t_data data)
 {
     free(data.zbuffer);

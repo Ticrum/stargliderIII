@@ -1,6 +1,18 @@
 
 #include <starglider.h>
 
+static void respawn_present(t_data *data)
+{
+    int compt;
+
+    compt = 0;
+    while (compt < data->nbr_boss)
+        {
+            data->boss[compt].hp = data->boss[compt].maxhp;
+            compt = compt + 1;
+        }
+}
+
 static void player_movement(t_data  *data,
                             t_pos   *move,
                             t_pos   *rota)
@@ -99,37 +111,98 @@ static void player_movement(t_data  *data,
     }
 }
 
-static void all_enemy(t_data *data)
+static void draw_all_enemy(t_data *data)
 {
     int compt;
+    int compt2;
 
     compt = 0;
     while (compt < data->nbr_enemy)
     {
-        move_enemy(&data->enemy[compt], data->rota);
-        draw_enemy(data->pix, data->zbuffer, &data->enemy[compt], data->rota, data->move, data->foca);
+        draw_enemy(data->pix, data->zbuffer, &data->enemy[compt], data->foca);
         compt = compt + 1;
     }
     compt = 0;
     while (compt < data->nbr_turret)
     {
-        move_turret(&data->turret[compt], data->rota);
-        draw_turret(data->pix, data->zbuffer, &data->turret[compt], data->rota, data->move, data->foca);
-        fire_turret_proj(&data->turret[compt]);
-        move_proj(data->turret[compt].proj, 50);
-        draw_proj(data->pix, data->turret[compt].proj, data->zbuffer, data->rota, data->move, data->foca, 50);
+        draw_turret(data->pix, data->zbuffer, &data->turret[compt], data->foca);
+        draw_proj(data->pix, data->turret[compt].proj, data->zbuffer, data->foca, 50);
+        compt = compt + 1;
+    }
+    compt = 0;
+    while (compt < data->nbr_boss)
+    {
+        draw_boss(data->pix, data->zbuffer, &data->boss[compt], data->foca);
+        compt2 = 0;
+        if (data->boss[compt].hp > 0)
+            while (compt2 < data->boss[compt].nbr_turret)
+                {
+                    draw_turret(data->pix, data->zbuffer, &data->boss[compt].turret[compt2], data->foca);
+                    draw_proj(data->pix, data->boss[compt].turret[compt2].proj, data->zbuffer, data->foca, 50);
+                    compt2 = compt2 + 1;
+                }
         compt = compt + 1;
     }
 }
 
-static void all_sphere(t_data *data)
+static void move_all_enemy(t_data *data)
+{
+    int compt;
+    int compt2;
+
+    compt = 0;
+    while (compt < data->nbr_enemy)
+    {
+        move_enemy(&data->enemy[compt], data->rota, data->rota, data->move);
+        compt = compt + 1;
+    }
+    compt = 0;
+    while (compt < data->nbr_turret)
+    {
+        move_turret(&data->turret[compt], data->rota, data->rota, data->move);
+        fire_turret_proj(&data->turret[compt]);
+        move_proj(data->turret[compt].proj, 50, data->rota, data->move);
+        compt = compt + 1;
+    }
+    compt = 0;
+    while (compt < data->nbr_boss)
+    {
+        move_boss(&data->boss[compt], data->rota, data->rota, data->move);
+        compt2 = 0;
+        if (data->boss[compt].hp > 0)
+            while (compt2 < data->boss[compt].nbr_turret)
+                {
+                    fire_turret_proj(&data->boss[compt].turret[compt2]);
+                    move_proj(data->boss[compt].turret[compt2].proj, 50, data->rota, data->move);
+                    compt2 = compt2 + 1;
+                }
+        compt = compt + 1;
+    }
+}
+
+static void draw_all_sphere(t_data *data)
 {
     int compt;
 
     compt = 0;
     while (compt < data->nbr_sphere)
     {
-        draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->rota, data->move, data->foca);
+        //move_sphere(&data->sphere[compt], data->rota, data->move);
+        draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->foca);
+        compt = compt + 1;
+    }
+    //draw_sphere(data->pix, data->zbuffer, &data->sphere[14], data->rota, data->move);
+}
+
+static void move_all_sphere(t_data *data)
+{
+    int compt;
+
+    compt = 0;
+    while (compt < data->nbr_sphere)
+    {
+        move_sphere(&data->sphere[compt], data->rota, data->move);
+        //draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->foca);
         compt = compt + 1;
     }
     //draw_sphere(data->pix, data->zbuffer, &data->sphere[14], data->rota, data->move);
@@ -138,20 +211,16 @@ static void all_sphere(t_data *data)
 static t_bunny_response display(void *data2)
 {
     t_data *data;
+    double fps;
 
     data = (t_data *)data2;
     draw_star(data->pix, &data->star, data->foca);
-    move_star(&data->star, data->rota);
-    std_draw(data->pix, data->zbuffer, &data->obj[0], data->rota, data->move, data->foca);
+    std_draw(data->pix, data->zbuffer, &data->obj[0], data->foca);
 
-    dmg_player(data, data->nbr_enemy);
-    dmg_player_proj(data, 50);
+    draw_all_sphere(data);
+    draw_all_enemy(data);
 
-    all_sphere(data);
-    all_enemy(data);
-
-    move_proj(data->player.proj, 50);
-    draw_proj(data->pix, data->player.proj, data->zbuffer, data->rota, data->move, data->foca, 50);
+    draw_proj(data->pix, data->player.proj, data->zbuffer, data->foca, 50);
 
     data->obj[2].position.x = 0;//-data->pos.x;
     data->obj[2].position.y = 5;//300 * (1 - (data->p    //printf("%f\n", data->obj[2].position.y);
@@ -160,15 +229,19 @@ static t_bunny_response display(void *data2)
     data->rota.y = 0;
     data->rota.z = 0;//0.5;
     std_draw_static(data->pix, data->zbuffer, &data->obj[2], data->rota, data->obj[2].position, data->foca);
-    //printf("%f %f %f\n", data->rotation.x / M_PI * 180.0, data->rotation.y /
-    //M_PI * 180.0, data->rotation.z / M_PI * 180.0);
     display_hud(data);
     bunny_blit(&data->win->buffer, &data->pix->clipable, NULL);
     bunny_display(data->win);
-    return (GO_ON);
+
+    fps = 1.0 / ((double)(clock() - data->time) / CLOCKS_PER_SEC);
+    data->fps = data->fps + fps;
+    data->compt = data->compt + 1;
+    if (data->compt % 2 == 0)
+        printf("FPS = %f Avr = %f\r",fps, data->fps / data->compt);
+return (GO_ON);
 }
 
-static t_bunny_response std_affiche(void *data2)
+static t_bunny_response loop(void *data2)
 {
   t_data *data;
   t_pos pos[2];
@@ -177,6 +250,7 @@ static t_bunny_response std_affiche(void *data2)
   int y;
 
   data = (t_data *)data2;
+  data->time = clock();
   std_clear_pixelarray(data->pix, BLACK);
   //write(1,"a",1);
   x = data->pix->clipable.buffer.width;
@@ -219,12 +293,15 @@ static t_bunny_response std_affiche(void *data2)
           data->player.ammo = data->player.ammo - 2;
       }
       dmg_enemy(data->enemy, data->player.proj, data->nbr_enemy, data->mode);
+      dmg_boss(data->boss, data->player.proj, data->nbr_boss, data->mode, &data->score);
   }
   if (bunny_get_keyboard()[BKS_UP])
       data->foca = data->foca + 5;
   if (bunny_get_keyboard()[BKS_DOWN])
       data->foca = data->foca - 5;
 
+  if (bunny_get_keyboard()[BKS_LEFT] && bunny_get_keyboard()[BKS_T] && bunny_get_keyboard()[BKS_B])
+      respawn_present(data);
   if (data->player.energy < data->player.maxenergy)
       data->player.energy = data->player.energy + 1;
 
@@ -235,6 +312,16 @@ static t_bunny_response std_affiche(void *data2)
   if (data->player.ammo >= data->player.maxammo)
       data->player.r = false;
 
+  move_star(&data->star, data->rota);
+  std_move(&data->obj[0], data->rota, data->move);
+
+  dmg_player(data, data->nbr_enemy);
+  dmg_player_proj(data, 50);
+
+  move_all_sphere(data);
+  move_all_enemy(data);
+
+  move_proj(data->player.proj, 50, data->rota, data->move);
   return (GO_ON);
 }
 
@@ -264,19 +351,19 @@ static t_bunny_response std_stop(t_bunny_event_state state,
 
 int main(void)
 {
-    printf("%zu\n", sizeof(t_data));
+    //printf("%zu\n", sizeof(t_data));
     //return (0);
-  t_data data;
+    t_data data;
 
-  data = init_game();
-  printf("Game started\n");
-  bunny_set_loop_main_function(std_affiche);
-  bunny_set_key_response(std_stop);
-  bunny_set_display_function(display);
-  bunny_loop(data.win, 60, (void *)&data);
-  bunny_stop(data.win);
-  printf("%d\n", data.score);
-  free_game(data);
-  return (0);
+    data = init_game();
+    printf("Game started\n");
+    bunny_set_loop_main_function(loop);
+    bunny_set_key_response(std_stop);
+    bunny_set_display_function(display);
+    bunny_loop(data.win, 60, (void *)&data);
+    bunny_stop(data.win);
+    printf("\nscore : %d\n", data.score);
+    free_game(data);
+    return (0);
 }
 

@@ -13,7 +13,9 @@ user=$(shell printenv USER)
 
 all: cc
 
-cc: $(obj)
+cc: $(out)
+
+$(out): $(obj)
 	gcc $(obj) -o $(out) $(libpath) $(flag) $(link)
 
 instal: dy
