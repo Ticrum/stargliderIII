@@ -56,6 +56,7 @@ cl:
 	@rm -f src/*~
 	@rm -f include/*~
 	@rm -f *~
+	@rm -f vgcore*
 	@rm -f $(obj)
 	@rm -f $(lib)
 	@rm -f $(sta)

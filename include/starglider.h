@@ -131,6 +131,11 @@ typedef struct s_data
     double fps;
     int compt;
     double time;
+    int resox;
+    int resoy;
+    bool joy_mode;
+    t_bunny_joystick *j0;
+    t_bunny_joystick *j1;
 }t_data;
 
 double std_abs(double				nbr);
@@ -281,7 +286,7 @@ void            move_enemy(t_enemy              *enemy,
                            t_pos                rotation,
                            t_pos                posi2);
 
-t_data          init_game(void);
+t_data          init_game(t_data                *data);
 
 void            dmg_player(t_data               *data,
                            int                  len);

@@ -24,67 +24,67 @@ static void player_movement(t_data  *data,
 
     x = data->pix->clipable.buffer.width;
     y = data->pix->clipable.buffer.height;
-    if (bunny_get_keyboard()[BKS_S])
+    if (bunny_get_keyboard()[BKS_S] || (data->joy_mode == true && bunny_get_joy_axis()[0][1] > 50))
     {
         data->player.pos.z = data->player.pos.z + 5;
         move->z = 5;
     }
-    if (bunny_get_keyboard()[BKS_Z])
+    if (bunny_get_keyboard()[BKS_Z] || (data->joy_mode == true && bunny_get_joy_axis()[0][1] < -50))
     {
         data->player.pos.z = data->player.pos.z - 13;
         move->z = -15;
     }
-    if (bunny_get_keyboard()[BKS_D])
+    if (bunny_get_keyboard()[BKS_D] || (data->joy_mode == true && bunny_get_joy_axis()[0][0] > 50))
     {
         data->player.pos.x = data->player.pos.x - 10;
         move->x = -7;
     }
-    if (bunny_get_keyboard()[BKS_Q])
+    if (bunny_get_keyboard()[BKS_Q] || (data->joy_mode == true && bunny_get_joy_axis()[0][0] < -50))
     {
         data->player.pos.x = data->player.pos.x + 10;
         move->x = 7;
     }
-    if (bunny_get_keyboard()[BKS_A])
+    if (bunny_get_keyboard()[BKS_A] || ((data->joy_mode == true && bunny_get_joy_axis()[0][1] > 50) && (data->joy_mode == true && bunny_get_joy_button()[0][1] == true)))
     {
         data->player.pos.y = data->player.pos.y - 10;
         move->y = -7;
     }
-    if (bunny_get_keyboard()[BKS_E])
+    if (bunny_get_keyboard()[BKS_E] || ((data->joy_mode == true && bunny_get_joy_axis()[0][1] < -50) && (data->joy_mode == true && bunny_get_joy_button()[0][1] == true)))
     {
         data->player.pos.y = data->player.pos.y + 10;
         move->y = 7;
     }
-    if (bunny_get_keyboard()[BKS_O])
+    if (bunny_get_keyboard()[BKS_O] || (data->joy_mode == true && bunny_get_joy_axis()[1][1] < -50))
     {
         data->player.rotation.x = data->player.rotation.x + 0.025;
         rota->x = -0.025;
     }
-    if (bunny_get_keyboard()[BKS_L])
+    if (bunny_get_keyboard()[BKS_L] || (data->joy_mode == true && bunny_get_joy_axis()[1][1] > 50))
     {
         data->player.rotation.x = data->player.rotation.x - 0.025;
         rota->x = 0.025;
     }
-    if (bunny_get_keyboard()[BKS_K])
+    if (bunny_get_keyboard()[BKS_K] || ((data->joy_mode == true && bunny_get_joy_axis()[1][0] < -50) && (data->joy_mode == true && bunny_get_joy_button()[1][3] == false)))
     {
         data->player.rotation.y = data->player.rotation.y + 0.025;
         rota->y = 0.025;
     }
-    if (bunny_get_keyboard()[BKS_M])
+    if (bunny_get_keyboard()[BKS_M] || ((data->joy_mode == true && bunny_get_joy_axis()[1][0] > 50) && (data->joy_mode == true && bunny_get_joy_button()[1][3] == false)))
     {
         data->player.rotation.y = data->player.rotation.y - 0.025;
         rota->y = -0.025;
     }
-    if (bunny_get_keyboard()[BKS_P])
+    if (bunny_get_keyboard()[BKS_P] || ((data->joy_mode == true && bunny_get_joy_axis()[1][0] > 50) && (data->joy_mode == true && bunny_get_joy_button()[1][3] == true)))
     {
         data->player.rotation.z = data->player.rotation.z + 0.05;
         rota->z = -0.05;
     }
-    if (bunny_get_keyboard()[BKS_I])
+    if (bunny_get_keyboard()[BKS_I] || ((data->joy_mode == true && bunny_get_joy_axis()[1][0] < -50) && (data->joy_mode == true && bunny_get_joy_button()[1][3] == true)))
     {
         data->player.rotation.z = data->player.rotation.z - 0.05;
         rota->z = 0.05;
     }
-    if (bunny_get_keyboard()[BKS_LCONTROL] && data->player.energy > 0)
+    if ((bunny_get_keyboard()[BKS_LCONTROL] || (data->joy_mode == true && bunny_get_joy_button()[0][0] == true)) && data->player.energy > 0)
     {
         move->x = move->x * 3;
         move->y = move->y * 3;
@@ -253,81 +253,84 @@ static t_bunny_response loop(void *data2)
   data->time = clock();
   std_clear_pixelarray(data->pix, BLACK);
   //write(1,"a",1);
-  x = data->pix->clipable.buffer.width;
-  y = data->pix->clipable.buffer.height;
-  respawn_enemy(data->enemy, data->nbr_enemy, &data->score);
-
-  if (data->player.hp < 0)
-      return (EXIT_ON_SUCCESS);
-  data->move.x = 0;
-  data->move.y = 0;
-  data->move.z = 0;
-  data->rota.x = 0;
-  data->rota.y = 0;
-  data->rota.z = 0;
-  clear_zbuffer(data->zbuffer, data->pix);
-
-  player_movement(data, &data->move, &data->rota);
-
-  if (bunny_get_keyboard()[BKS_SPACE] && data->player.energy > 0)
-  {
-      if (data->mode == false)
+  if (data->player.hp > 0)
       {
-          pos[0].x = x * 0.5;//500;
-          pos[0].y = y * 0.5;//500;
-          pos[0].z = 400;
-          pos[1].x = x * 0.5 + y * -0.15;//445;
-          pos[1].y = y * 0.645;// + 145;
-          pos[1].z = -800;
-          color = PURPLE;
-          fire_beam(data->pix, data->zbuffer, pos, &color);
-          pos[1].x = x * 0.5 + y * 0.15;
-          pos[1].y = y * 0.645;// + 145;
-          pos[1].z = -800;
-          fire_beam(data->pix, data->zbuffer, pos, &color);
-          data->player.energy = data->player.energy - 3;
+          x = data->pix->clipable.buffer.width;
+          y = data->pix->clipable.buffer.height;
+          respawn_enemy(data->enemy, data->nbr_enemy, &data->score);
+
+          //if (data->player.hp < 0)
+          //    return (EXIT_ON_SUCCESS);
+          data->move.x = 0;
+          data->move.y = 0;
+          data->move.z = 0;
+          data->rota.x = 0;
+          data->rota.y = 0;
+          data->rota.z = 0;
+          clear_zbuffer(data->zbuffer, data->pix);
+
+          player_movement(data, &data->move, &data->rota);
+
+          if ((bunny_get_keyboard()[BKS_SPACE] || (data->joy_mode == true && bunny_get_joy_button()[1][0] == true)) && data->player.energy > 0)
+              {
+                  if (data->mode == false)
+                      {
+                          pos[0].x = x * 0.5;//500;
+                          pos[0].y = y * 0.5;//500;
+                          pos[0].z = 400;
+                          pos[1].x = x * 0.5 + y * -0.15;//445;
+                          pos[1].y = y * 0.645;// + 145;
+                          pos[1].z = -800;
+                          color = PURPLE;
+                          fire_beam(data->pix, data->zbuffer, pos, &color);
+                          pos[1].x = x * 0.5 + y * 0.15;
+                          pos[1].y = y * 0.645;// + 145;
+                          pos[1].z = -800;
+                          fire_beam(data->pix, data->zbuffer, pos, &color);
+                          data->player.energy = data->player.energy - 3;
+                      }
+                  else if (data->player.ammo > 0 && data->player.r == false)
+                      {
+                          fire_proj(&data->player);
+                          data->player.ammo = data->player.ammo - 2;
+                      }
+                  dmg_enemy(data->enemy, data->player.proj, data->nbr_enemy, data->mode);
+                  dmg_boss(data->boss, data->player.proj, data->nbr_boss, data->mode, &data->score);
+              }
+          if (bunny_get_keyboard()[BKS_UP])
+              data->foca = data->foca + 5;
+          if (bunny_get_keyboard()[BKS_DOWN])
+              data->foca = data->foca - 5;
+
+          if (bunny_get_keyboard()[BKS_LEFT] && bunny_get_keyboard()[BKS_T] && bunny_get_keyboard()[BKS_B])
+              respawn_present(data);
+          if (data->player.energy < data->player.maxenergy)
+              data->player.energy = data->player.energy + 1;
+
+          if (data->player.ammo <= 0)
+              data->player.r = true;
+          if (data->player.ammo < data->player.maxammo && data->player.r == true)
+              data->player.ammo = data->player.ammo + 1;
+          if (data->player.ammo >= data->player.maxammo)
+              data->player.r = false;
+
+          move_star(&data->star, data->rota);
+          std_move(&data->obj[0], data->rota, data->move);
+
+          dmg_player(data, data->nbr_enemy);
+          dmg_player_proj(data, 50);
+
+          move_all_sphere(data);
+          move_all_enemy(data);
+
+          move_proj(data->player.proj, 50, data->rota, data->move);
       }
-      else if (data->player.ammo > 0 && data->player.r == false)
-      {
-          fire_proj(&data->player);
-          data->player.ammo = data->player.ammo - 2;
-      }
-      dmg_enemy(data->enemy, data->player.proj, data->nbr_enemy, data->mode);
-      dmg_boss(data->boss, data->player.proj, data->nbr_boss, data->mode, &data->score);
-  }
-  if (bunny_get_keyboard()[BKS_UP])
-      data->foca = data->foca + 5;
-  if (bunny_get_keyboard()[BKS_DOWN])
-      data->foca = data->foca - 5;
-
-  if (bunny_get_keyboard()[BKS_LEFT] && bunny_get_keyboard()[BKS_T] && bunny_get_keyboard()[BKS_B])
-      respawn_present(data);
-  if (data->player.energy < data->player.maxenergy)
-      data->player.energy = data->player.energy + 1;
-
-  if (data->player.ammo <= 0)
-      data->player.r = true;
-  if (data->player.ammo < data->player.maxammo && data->player.r == true)
-      data->player.ammo = data->player.ammo + 1;
-  if (data->player.ammo >= data->player.maxammo)
-      data->player.r = false;
-
-  move_star(&data->star, data->rota);
-  std_move(&data->obj[0], data->rota, data->move);
-
-  dmg_player(data, data->nbr_enemy);
-  dmg_player_proj(data, 50);
-
-  move_all_sphere(data);
-  move_all_enemy(data);
-
-  move_proj(data->player.proj, 50, data->rota, data->move);
   return (GO_ON);
 }
 
 static t_bunny_response std_stop(t_bunny_event_state state,
-				 t_bunny_keysym keycode,
-				 void * data2)
+				 t_bunny_keysym      keycode,
+				 void                *data2)
 {
   t_data *data;
 
@@ -344,8 +347,65 @@ static t_bunny_response std_stop(t_bunny_event_state state,
           data->mode = false;
       //printf("%d\n", data->mode);
   }
+  if (keycode == BKS_N)
+      {
+          printf("\nscore : %d\n", data->score);
+          init_game(data);
+      }
   if (keycode == BKS_ESCAPE)
     return (EXIT_ON_SUCCESS);
+  return (GO_ON);
+}
+
+static t_bunny_response joy_con(t_bunny_event_state state,
+                                int                 joyid,
+                                const t_bunny_joystick *joyinfo,
+                                void                *data2)
+{
+    t_data *data;
+
+    data = (t_data *)data2;
+    //write(1,"but3\n",5);
+    //data->j0 = bunny_get_joy_info(0);
+    return (GO_ON);
+}
+
+static t_bunny_response joy_axe(int                 joyid,
+                                t_bunny_axis        axis,
+                                float               value,
+                                void                *data2)
+{
+    //write(1,"but2\n",5);
+    //printf("val = %f\n", value);
+    return (GO_ON);
+}
+
+static t_bunny_response joy(t_bunny_event_state state,
+                            int                 joyif,
+                            int                 button,
+                            void                *data2)
+{
+  t_data *data;
+
+  data = (t_data *)data2;
+  //write(1,"but\n",4);
+  if (state == GO_UP)
+    return (GO_ON);
+  if (button == 2 && joyif == 1)
+      data->player.r = true;
+  if (button == 1 && joyif == 1)
+  {
+      if (data->mode == false)
+          data->mode = true;
+      else
+          data->mode = false;
+      //printf("%d\n", data->mode);
+  }
+  if (button == 3 && joyif == 0)
+      {
+          printf("\nscore : %d\n", data->score);
+          init_game(data);
+      }
   return (GO_ON);
 }
 
@@ -355,10 +415,20 @@ int main(void)
     //return (0);
     t_data data;
 
-    data = init_game();
+    data.resox = 1280;//1280
+    data.resoy = 720;//720
+    data.win = bunny_start(data.resox, data.resoy, false, "Bunny");
+    init_game(&data);
     printf("Game started\n");
     bunny_set_loop_main_function(loop);
     bunny_set_key_response(std_stop);
+    if (data.joy_mode == true)
+        {
+            bunny_set_joy_connect_response(joy_con);
+            bunny_set_joy_button_response(joy);
+            bunny_set_joy_axis_response(joy_axe);
+            write(1,"yes\n",4);
+        }
     bunny_set_display_function(display);
     bunny_loop(data.win, 60, (void *)&data);
     bunny_stop(data.win);
