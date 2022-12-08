@@ -365,8 +365,10 @@ static t_bunny_response joy_con(t_bunny_event_state state,
     t_data *data;
 
     data = (t_data *)data2;
-    //write(1,"but3\n",5);
-    //data->j0 = bunny_get_joy_info(0);
+    (void)state;
+    (void)joyid;
+    (void)joyinfo;
+    (void)data;
     return (GO_ON);
 }
 
@@ -375,8 +377,10 @@ static t_bunny_response joy_axe(int                 joyid,
                                 float               value,
                                 void                *data2)
 {
-    //write(1,"but2\n",5);
-    //printf("val = %f\n", value);
+    (void)joyid;
+    (void)axis;
+    (void)value;
+    (void)data2;
     return (GO_ON);
 }
 
