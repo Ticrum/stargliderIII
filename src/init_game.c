@@ -33,6 +33,9 @@ static void init_star(t_data *data)
 
 static void init_stats(t_data *data)
 {
+    data->compt = 0;
+    data->fps = 0;
+
     data->player.hp = 1000;
     data->player.maxhp = 1000;
     data->player.energy = 100;

@@ -187,11 +187,12 @@ static void draw_all_sphere(t_data *data)
     compt = 0;
     while (compt < data->nbr_sphere)
     {
-        //move_sphere(&data->sphere[compt], data->rota, data->move);
-        draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->foca);
+        t_bunny_position posi = std_perspective(data->sphere[compt].po[0][0].x, data->sphere[compt].po[0][0].y, data->sphere[compt].po[0][0].z, data->foca);
+        if (posi.x > -1000 && posi.x < data->pix->clipable.buffer.width + 100 &&
+            posi.y > -800 && posi.y < data->pix->clipable.buffer.height + 100)
+            draw_sphere(data->pix, data->zbuffer, &data->sphere[compt], data->foca);
         compt = compt + 1;
     }
-    //draw_sphere(data->pix, data->zbuffer, &data->sphere[14], data->rota, data->move);
 }
 
 static void move_all_sphere(t_data *data)

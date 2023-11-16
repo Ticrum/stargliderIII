@@ -114,7 +114,7 @@ typedef struct s_data
     t_star star;
     t_obj obj[3];
     int nbr_obj;
-    t_sphere sphere[50];
+    t_sphere sphere[500];
     int nbr_sphere;
     t_enemy enemy[200];
     int nbr_enemy;
